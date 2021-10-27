@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "368752225163",
+    "firebase_url": "https://messenger-77831-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "messenger-77831",
+    "storage_bucket": "messenger-77831.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368752225163:android:9fa3134244db76ed125d8e",
+        "android_client_info": {
+          "package_name": "com.example.mymessenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368752225163-d2g0h0962qbjmp37t95c2r2fabkpm4ae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQaJNNlEqj3HqG3WM4RUfjNyFCTIpenuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368752225163-d2g0h0962qbjmp37t95c2r2fabkpm4ae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
