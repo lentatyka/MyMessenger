@@ -3,8 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/drawable/ic_enter.xml" value="0.3828125" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/drawable/ic_takein.xml" value="0.3828125" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/drawable/ic_takein_read.xml" value="0.3828125" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/drawable/ic_takeoff.xml" value="0.3828125" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/drawable/ic_takeoff_read.xml" value="0.3828125" />
         <entry key="..\:/Android/MyMessenger/app/src/main/res/layout-v26/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/layout/activity_login.xml" value="0.36666666666666664" />
         <entry key="..\:/Android/MyMessenger/app/src/main/res/layout/activity_main.xml" value="0.20520833333333333" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/layout/chat_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/layout/chatlist_item.xml" value="0.67" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/layout/contacts_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/layout/fragment_chatlist.xml" value="0.33" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/layout/fragment_contacts.xml" value="0.35260416666666666" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/layout/fragment_login.xml" value="0.3645833333333333" />
+        <entry key="..\:/Android/MyMessenger/app/src/main/res/layout/fragment_private_chat.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

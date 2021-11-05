@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/chatListFragment">
+
+    <fragment
+        android:id="@+id/chatListFragment"
+        android:name="com.example.mymessenger.fragments.ChatListFragment"
+        android:label="ChatListFragment"
+        tools:layout="@layout/fragment_chatlist" >
+        <action
+            android:id="@+id/action_chatListFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="com.example.mymessenger.fragments.ContactsFragment"
+        android:label="fragment_contacts"
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_contactsFragment_to_privateChatFragment"
+            app:destination="@id/privateChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/privateChatFragment"
+        android:name="com.example.mymessenger.fragments.PrivateChatFragment"
+        android:label="fragment_private_chat"
+        tools:layout="@layout/fragment_private_chat" >
+        <argument
+            android:name="uid"
+            app:argType="string" />
+    </fragment>
+</navigation>
