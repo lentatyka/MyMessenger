@@ -3,6 +3,7 @@ package com.example.mymessenger.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -24,34 +25,32 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setViewModel()
+        //Ignore login then delete
+        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+        startActivity(intent, null)
         binding.btnAuth.setOnClickListener {
             if(checkFields()){
                 Constants.EMAIL = binding.etEmail.text.toString()
                 Constants.PASSWORD = binding.etPassword.text.toString()
-                loginViewModel.signIn()
+                lifecycleScope.launchWhenStarted {
+                    loginViewModel.signIn().onEach {state->
+                        when(state){
+                            is State.Success ->{
+                                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                                startActivity(intent, null)
+                            }
+                            is State.Error ->{
+                                showToast(state.exception.toString())
+                            }
+                            else->{
+                                //nothing
+                            }
+                        }
+                    }.collect()
+                }
             }
             else
                 showToast("Bad fields data")
-        }
-    }
-
-    private fun setViewModel(){
-        lifecycleScope.launchWhenStarted {
-            loginViewModel.authState.onEach {state->
-                when(state){
-                    is State.Success ->{
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                        startActivity(intent, null)
-                    }
-                    is State.Error ->{
-                        showToast(state.exception.toString())
-                    }
-                    is State.Waiting->{
-                        //nothing
-                    }
-                }
-            }.collect()
         }
     }
 

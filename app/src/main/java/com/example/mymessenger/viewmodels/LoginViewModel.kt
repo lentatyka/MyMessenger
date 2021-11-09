@@ -1,5 +1,6 @@
 package com.example.mymessenger.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mymessenger.interfaces.Authenticator
@@ -12,23 +13,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val auth: Authenticator<@JvmSuppressWildcards Nothing>
+    private val auth: Authenticator<Unit>
     ):ViewModel() {
-
-    private val _authState = MutableStateFlow<State< Nothing>>(State.Success)
-    val authState: StateFlow<State<Nothing>> = _authState.asStateFlow()
 
     fun isDataValid(email: String, password: String): Boolean {
         return email.isValidEmail() && password.isNotEmpty()
     }
 
-    fun signIn() {
-        //Что тут творится!!!!!!!
-            viewModelScope.launch {
-                auth.signIn {
-                    _authState.value = it
-                }
-            }
+    fun signIn() = flow<State<Exception>>{
+        emit(State.Success)
+        try {
+            auth.signIn()
+            emit(State.Success)
+        }catch (e: Exception){
+            emit(State.Error(e))
+        }
     }
 
     fun signOut(){

@@ -1,25 +1,22 @@
 package com.example.mymessenger.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.mymessenger.R
 import com.example.mymessenger.adapters.ContactsAdapter
 import com.example.mymessenger.databinding.FragmentContactsBinding
-import com.example.mymessenger.utills.Contact
 import com.example.mymessenger.utills.State
 import com.example.mymessenger.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
@@ -40,13 +37,14 @@ class ContactsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        settAdapter()
+        setAdapter()
         setViewModel()
     }
 
+
     private fun setViewModel() {
         lifecycleScope.launchWhenStarted {
-            viewModel.contacts.onEach {state->
+            viewModel.getContacts().onEach { state->
                 when(state){
                     is State.Contacts ->{
                         _adapter.setList(state.contacts.toList())
@@ -57,16 +55,19 @@ class ContactsFragment : Fragment() {
                         binding.loader.visibility = View.VISIBLE
                         binding.contactsRv.visibility = View.GONE
                     }
+                    is State.Error->{
+                        //Temp for testing
+                        Toast.makeText(context, "Error: ${state.exception.message}", Toast.LENGTH_SHORT).show()
+                    }
                     else->{
                         //nothing
                     }
                 }
             }.collect()
         }
-        viewModel.getContacts()
     }
 
-    private fun settAdapter() {
+    private fun setAdapter() {
         _adapter = ContactsAdapter{userId->
             val action = ContactsFragmentDirections.actionContactsFragmentToPrivateChatFragment(userId)
             findNavController().navigate(action)

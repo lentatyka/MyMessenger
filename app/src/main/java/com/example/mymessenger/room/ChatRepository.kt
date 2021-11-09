@@ -10,11 +10,10 @@ class ChatRepository @Inject constructor(
         roomDAO.insert(message)
     }
 
-    suspend fun delete(chat: Chat){
-        roomDAO.delete(chat)
+    suspend fun delete(uid: String){
+        roomDAO.delete(uid)
     }
 
-    suspend fun getChat(uid: String){
-        roomDAO.getChat(uid)
-    }
+    fun getChat(uid: String) = roomDAO.getChat(uid)
+
 }
