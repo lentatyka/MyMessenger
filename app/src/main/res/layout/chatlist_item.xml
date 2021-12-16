@@ -47,10 +47,10 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginStart="16dp"
-        android:src="@drawable/ic_takein_read"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/card_view"
-        app:layout_constraintTop_toTopOf="@+id/message_tv" />
+        app:layout_constraintTop_toTopOf="@+id/message_tv"
+        tools:srcCompat="@drawable/ic_takein_read" />
 
     <TextView
         android:id="@+id/message_tv"

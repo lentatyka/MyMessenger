@@ -5,31 +5,49 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/chatListFragment">
 
+    <action
+        android:id="@+id/action_global_to_PrivateChatFragment"
+        app:destination="@id/chatListFragment"
+        app:launchSingleTop="true"/>
+
     <fragment
         android:id="@+id/chatListFragment"
-        android:name="com.example.mymessenger.fragments.ChatListFragment"
+        android:name="com.example.mymessenger.f_chatlist.ChatListFragment"
         android:label="ChatListFragment"
         tools:layout="@layout/fragment_chatlist" >
         <action
             android:id="@+id/action_chatListFragment_to_contactsFragment"
             app:destination="@id/contactsFragment" />
+        <action
+            android:id="@+id/action_chatListFragment_to_privateChatFragment"
+            app:destination="@id/privateChatFragment" />
     </fragment>
     <fragment
         android:id="@+id/contactsFragment"
         android:name="com.example.mymessenger.fragments.ContactsFragment"
         android:label="fragment_contacts"
-        tools:layout="@layout/fragment_contacts" >
+        tools:layout="@layout/fragment_contacts">
         <action
             android:id="@+id/action_contactsFragment_to_privateChatFragment"
-            app:destination="@id/privateChatFragment" />
+            app:destination="@id/privateChatFragment"
+            app:popUpTo="@id/chatListFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/privateChatFragment"
-        android:name="com.example.mymessenger.fragments.PrivateChatFragment"
+        android:name="com.example.mymessenger.f_privatechat.PrivateChatFragment"
         android:label="fragment_private_chat"
         tools:layout="@layout/fragment_private_chat" >
         <argument
-            android:name="uid"
-            app:argType="string" />
+            android:name="contact"
+            app:argType="com.example.mymessenger.utills.Contact" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.mymessenger.fragment_login.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_chatListFragment"
+            app:destination="@id/chatListFragment" />
     </fragment>
 </navigation>

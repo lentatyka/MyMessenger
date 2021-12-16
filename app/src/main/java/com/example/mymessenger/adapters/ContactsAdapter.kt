@@ -9,7 +9,7 @@ import com.example.mymessenger.databinding.ContactsItemBinding
 import com.example.mymessenger.utills.Contact
 
 class ContactsAdapter(
-    private val callback:(String)->Unit
+    private val callback:(Contact)->Unit
     ):RecyclerView.Adapter<ContactsAdapter.ContactsHolder>() {
 
     var contactsList: List<Contact?> = listOf()
@@ -37,7 +37,7 @@ class ContactsAdapter(
 
     class ContactsHolder(
         private val binding: ContactsItemBinding,
-        private val callback: (String) -> Unit
+        private val callback: (Contact) -> Unit
         ):RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: Contact?){
@@ -47,7 +47,7 @@ class ContactsAdapter(
                     emailTv.text = item.email
                 }
                 itemView.setOnClickListener{
-                    callback(item.uid!!)
+                    callback(item)
                 }
             }
         }

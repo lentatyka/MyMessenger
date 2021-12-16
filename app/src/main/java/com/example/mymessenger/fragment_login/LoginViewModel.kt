@@ -1,6 +1,5 @@
-package com.example.mymessenger.viewmodels
+package com.example.mymessenger.fragment_login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mymessenger.interfaces.Authenticator
