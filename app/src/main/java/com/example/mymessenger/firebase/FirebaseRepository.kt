@@ -4,12 +4,12 @@ package com.example.mymessenger.firebase
 import android.util.Log
 import com.example.mymessenger.interfaces.DatabaseInterface
 import com.example.mymessenger.interfaces.Message
-import com.example.mymessenger.room.RoomMessage
 import com.example.mymessenger.utills.Constants
 import com.example.mymessenger.utills.Constants.USER_ID
+import com.example.mymessenger.utills.Constants.USER_NAME
 import com.example.mymessenger.utills.Contact
 import com.example.mymessenger.utills.MessageStatus
-import com.example.mymessenger.utills.getCurrentTime
+import com.example.mymessenger.utills.logz
 import com.google.firebase.database.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -22,48 +22,52 @@ class FirebaseRepository @Inject constructor(
     private val reference: DatabaseReference
 ) : DatabaseInterface {
 
-    override suspend fun insert(message: Message):String {
-        val toUser = reference.child(message.uid!!).push()
-        val key = toUser.key.toString()
+    override suspend fun insert(message: Message){
+        val toUser = reference.child(message.uid!!).child(message.messageId!!)
         toUser.setValue(FirebaseMessage(
             uid = USER_ID,
-            name = message.name,
-            from = message.to,
-            to = null,
+            name = USER_NAME,
+            message = message.message,
             status = null,
             timestamp = message.timestamp,
-            messageId = key
+            messageId = message.messageId
         ))
         val fromUser = reference.child(USER_ID)
-        fromUser.child(key).setValue(
+        fromUser.child(message.messageId!!).setValue(
             FirebaseMessage(
                 uid = message.uid,
                 name = message.name,
                 status = MessageStatus.SENT,
-                messageId = key
+                messageId = message.messageId
             )
         )
-        return key
     }
 
     override suspend fun delete(message: Message) {
         (message as FirebaseMessage).apply {
-            reference.child(USER_ID).child(this.messageId.toString()).removeValue()
-            updateStatus(this)
+            reference.child(USER_ID).child(this.messageId!!).removeValue()
         }
     }
 
-    override suspend fun updateStatus(message: Message) {
-//        (message as FirebaseMessage).apply {
-//            reference.child(this.uid!!).child(this.messageId).child("status")
-//        }
+    override suspend fun updateStatus(message: Message, status: MessageStatus) {
+        val fb = FirebaseMessage(
+                uid = message.uid,
+                name = message.name,
+                status = status,
+                messageId = message.messageId
+            )
+        reference.child(message.uid!!)
+            .child(message.messageId!!).setValue(fb)
     }
 
-    suspend fun getContacts():List<Contact?>{
+    suspend fun getContacts():List<Contact>{
         val answer = reference.child(Constants.USERS_PATH).get().await()
-        val contactsList = mutableListOf<Contact?>()
+        val contactsList = mutableListOf<Contact>()
         answer.children.forEach {
-            contactsList += it.getValue(Contact::class.java)
+            it.getValue(Contact::class.java)?.let {contact->
+                if(contact.uid != USER_ID)
+                    contactsList += contact
+            }
         }
         return contactsList
     }
@@ -74,10 +78,8 @@ class FirebaseRepository @Inject constructor(
             //Отфильтровываем только сообщения от пользователя ((from != null)).
             //Сообщения, отправленные пользователю отслеживаются в методе onChildChanged!
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                snapshot.child("from").apply{
-                    offer(
-                        snapshot.getValue(FirebaseMessage::class.java)!!
-                    )
+                snapshot.child("message").value?.let {
+                 offer(snapshot.getValue(FirebaseMessage::class.java)!!)
                 }
             }
 
@@ -88,7 +90,7 @@ class FirebaseRepository @Inject constructor(
                 две синие галочки - прочитано!
                 В моем примере вместо галочек самолетики :D
                 */
-                snapshot.child("to").apply{
+                snapshot.child("status").value?.let{
                     offer(
                         snapshot.getValue(FirebaseMessage::class.java)!!
                     )
@@ -109,7 +111,7 @@ class FirebaseRepository @Inject constructor(
         }
         reference.child(Constants.USER_ID).addChildEventListener(chatListener)
         awaitClose {
-            Log.d("TAG", "AWAIT CALLED")
+            "await called".logz()
             reference.child(Constants.USER_ID).removeEventListener(chatListener)
         }
     }

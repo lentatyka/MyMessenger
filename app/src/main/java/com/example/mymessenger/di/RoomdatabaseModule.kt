@@ -2,16 +2,9 @@ package com.example.mymessenger.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.mymessenger.firebase.FirebaseAuthentication
-import com.example.mymessenger.firebase.FirebaseRepository
-import com.example.mymessenger.interfaces.Authenticator
-import com.example.mymessenger.interfaces.DatabaseInterface
-import com.example.mymessenger.room.ChatDAO
-import com.example.mymessenger.room.ChatDatabase
+import com.example.mymessenger.room.RoomDao
+import com.example.mymessenger.room.RoomDatabase
 import com.example.mymessenger.utills.Constants
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,17 +19,17 @@ class RoomdatabaseModule {
         @Provides
         fun provideChatDatabase(
             @ApplicationContext app: Context
-        ):ChatDatabase{
+        ):RoomDatabase{
             return Room.databaseBuilder(
                 app,
-                ChatDatabase::class.java,
+                RoomDatabase::class.java,
                 Constants.SQLITE_BASE_NAME
             ).build()
         }
 
         @Provides
         @Singleton
-        fun provideRoomDAO(db: ChatDatabase):ChatDAO{
+        fun provideRoomDAO(db: RoomDatabase):RoomDao{
             return db.getChatDAO()
         }
 }

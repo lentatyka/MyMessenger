@@ -10,20 +10,17 @@ import com.example.mymessenger.utills.MessageStatus
 
 @Entity(tableName = Constants.SQLITE_TABLE_CHAT)
 data class RoomMessage(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int =0,
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "messageId")
+    override val messageId: String,
     @ColumnInfo(name = "username")
     override val name: String?,
     @ColumnInfo(name="uid")
     override val uid: String?,
-    @ColumnInfo(name="from")
-    override val from: String?,
-    @ColumnInfo(name="to")
-    override val to: String?,
+    @ColumnInfo(name="message")
+    override val message: String?,
     @ColumnInfo(name="status")
     override val status: MessageStatus?,
     @ColumnInfo(name = "timestamp")
-    override val timestamp: Long?,
-    @ColumnInfo(name = "messageId")
-    override val messageId: String?
+    override val timestamp: Long?
 ):Message

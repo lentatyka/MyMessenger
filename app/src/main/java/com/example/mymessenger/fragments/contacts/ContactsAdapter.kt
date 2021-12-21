@@ -1,7 +1,6 @@
-package com.example.mymessenger.adapters
+package com.example.mymessenger.fragments.contacts
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

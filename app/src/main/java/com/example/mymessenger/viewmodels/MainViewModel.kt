@@ -2,30 +2,22 @@ package com.example.mymessenger.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mymessenger.firebase.FirebaseMessage
 import com.example.mymessenger.firebase.FirebaseRepository
 import com.example.mymessenger.interfaces.DatabaseInterface
-import com.example.mymessenger.interfaces.Message
-import com.example.mymessenger.room.ChatRepository
+import com.example.mymessenger.room.RoomRepository
+import com.example.mymessenger.room.RoomMessage
 import com.example.mymessenger.utills.*
-import com.xwray.groupie.Group
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val remoteRepository: DatabaseInterface,
-    private val roomRepository: ChatRepository
+    private val roomRepository: RoomRepository
 ) : ViewModel() {
-
-    //chatlist------------------------------------------------------
-    private val _lastMessages = MutableStateFlow<List<Message>>(emptyList())
-    val lastMessages: StateFlow<List<Message>> get() = _lastMessages.asStateFlow()
-
-    val _dudla = MutableStateFlow<String>("caller")
-    //--------------------------------------------------------------
 
     fun getContacts() = flow {
         emit(State.Waiting)
@@ -36,28 +28,36 @@ class MainViewModel @Inject constructor(
             emit(State.Error(e))
         }
     }
-    fun updateLastMessage() {
-        //Отработаем сообщение только если активность запущена
+    fun getChatList() = roomRepository.getLastMessages()
+
+    fun sendMessage(text: String, contact: Contact) {
         viewModelScope.launch {
-                roomRepository.getLastMessages().collect{
-                    _lastMessages.emit(it)
-                }
+            val message = getRoomMessageEntry(text, contact)
+            roomRepository.insertMessage(message)
+            remoteRepository.insert(message)
         }
     }
 
-//    fun getPrivateChat(uid: String) {
-//        viewModelScope.launch {
-//            privateChatList.clear()
-//            roomRepository.getChat(uid).also {messageList->
-//                messageList.forEach {
-//                    privateChatList +=
-//                        if(it.from != null)
-//                            MessageFrom(it)
-//                        else
-//                            MessageTo(it)
-//                }
-//                _privateChat.emit(privateChatList)
-//            }
-//        }
-//    }
+    fun getPrivateChat(uid: String) =flow{
+        roomRepository.getChat(uid).collect {list->
+            emit(list)
+            list.filter {rm->
+                rm.status != MessageStatus.READ && rm.status != null
+            }.onEach { message->
+                "oneach: $message".logz()
+                //remoteRepository.updateStatus(message, MessageStatus.READ)
+            }
+        }
+    }
+
+
+    private fun getRoomMessageEntry(message: String, contact: Contact) = RoomMessage(
+        uid = contact.uid!!,
+        name = contact.nickname!!,
+        message = message,
+        status = MessageStatus.SENT,
+        timestamp = getCurrentTime(),
+        messageId = UUID.randomUUID().toString()
+    )
+
 }

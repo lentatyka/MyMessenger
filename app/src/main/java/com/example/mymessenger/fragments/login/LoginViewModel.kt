@@ -1,4 +1,4 @@
-package com.example.mymessenger.fragment_login
+package com.example.mymessenger.fragments.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,10 +19,10 @@ class LoginViewModel @Inject constructor(
         return email.isValidEmail() && password.isNotEmpty()
     }
 
-    fun signIn() = flow<State<Exception>>{
-        emit(State.Success)
+    fun signIn(email: String, password: String) = flow{
+        emit(State.Waiting)
         try {
-            auth.signIn()
+            auth.signIn(email, password)
             emit(State.Success)
         }catch (e: Exception){
             emit(State.Error(e))

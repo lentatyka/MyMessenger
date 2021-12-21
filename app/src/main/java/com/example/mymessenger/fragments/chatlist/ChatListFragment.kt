@@ -1,4 +1,4 @@
-package com.example.mymessenger.f_chatlist
+package com.example.mymessenger.fragments.chatlist
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +27,7 @@ class ChatListFragment : Fragment() {
     private var _binding: FragmentChatlistBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MainViewModel by activityViewModels()
-    lateinit var chatlistAdapter: ChatListAdapter
+    private lateinit var chatlistAdapter: ChatListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,9 +53,9 @@ class ChatListFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        viewModel.updateLastMessage()
-        viewModel.lastMessages.onEach { message->
-            chatlistAdapter.setList(message)
+        viewModel.getChatList()
+        viewModel.getChatList().onEach { message->
+            chatlistAdapter.submitList(message)
         }.launchWhenStarted(lifecycleScope)
     }
 

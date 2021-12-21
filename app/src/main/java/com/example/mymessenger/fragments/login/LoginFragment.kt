@@ -1,10 +1,11 @@
-package com.example.mymessenger.fragment_login
+package com.example.mymessenger.fragments.login
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,7 +15,6 @@ import com.example.mymessenger.utills.Constants
 import com.example.mymessenger.utills.State
 import com.example.mymessenger.utills.launchWhenStarted
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
@@ -32,18 +32,32 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.btnAuth.setOnClickListener {
+        setLoginLayout()
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    private fun setLoginLayout() {
+        binding.root.also {
+            it.getViewById(R.id.signup).visibility = View.INVISIBLE
+            it.getViewById(R.id.login).visibility = View.VISIBLE
+        }
+        binding.login.btnLogin.setOnClickListener {
             if(checkFields()){
-                Constants.EMAIL = binding.etEmail.text.toString()
-                Constants.PASSWORD = binding.etPassword.text.toString()
-                loginViewModel.signIn().onEach {state->
+                val email = binding.login.etEmail.text.toString()
+                val password = binding.login.etPassword.text.toString()
+                loginViewModel.signIn(email, password).onEach {state->
                     when(state){
                         is State.Success ->{
+                            //temp
+                            Constants.USER_NAME = binding.login.test.text.toString()
                             findNavController()
                                 .navigate(R.id.action_loginFragment_to_chatListFragment)
                         }
                         is State.Error ->{
                             showToast(state.exception.toString())
+                        }
+                        is State.Waiting->{
+                            //show loading
                         }
                         else->{
                             //nothing
@@ -54,12 +68,26 @@ class LoginFragment : Fragment() {
             else
                 showToast("Bad fields data")
         }
-        super.onViewCreated(view, savedInstanceState)
+
+        binding.login.txtSignup.setOnClickListener {
+            setSignUpLayout()
+        }
     }
 
+    private fun setSignUpLayout() {
+        binding.root.also {
+            it.getViewById(R.id.login).visibility = View.INVISIBLE
+            it.getViewById(R.id.signup).visibility = View.VISIBLE
+        }
+        binding.signup.txtLogin.setOnClickListener {
+            setLoginLayout()
+        }
+    }
+
+
     private fun checkFields(): Boolean {
-        val email = binding.etEmail.text.toString()
-        val password = binding.etPassword.text.toString()
+        val email = binding.login.etEmail.text.toString()
+        val password = binding.login.etPassword.text.toString()
         return loginViewModel.isDataValid(email, password)
     }
 

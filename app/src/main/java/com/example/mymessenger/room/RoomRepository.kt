@@ -1,10 +1,9 @@
 package com.example.mymessenger.room
 
-import com.example.mymessenger.utills.logz
 import javax.inject.Inject
 
-class ChatRepository @Inject constructor(
-    private val roomDAO: ChatDAO
+class RoomRepository @Inject constructor(
+    private val roomDAO: RoomDao
 ) {
 
     suspend fun insertMessage(message: RoomMessage):Long{
@@ -17,14 +16,7 @@ class ChatRepository @Inject constructor(
 
     fun getLastMessages() = roomDAO.getLastMessages()
 
-    suspend fun getChat(uid: String) = roomDAO.getChat(uid)
-
-    fun getLast(uid:String) = roomDAO.getLast(uid)
-
-    suspend fun insertLastMessage(msg: RoomLastMessage){
-        val answer = roomDAO.insertLastMessage(msg)
-        "insert LAst?: $answer".logz()
-    }
+    fun getChat(uid: String) = roomDAO.getChat(uid)
 
     suspend fun updateStatus(message: RoomMessage){
         roomDAO.updateStatus(message.status!!, message.messageId!!)

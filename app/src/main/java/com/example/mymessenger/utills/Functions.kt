@@ -17,8 +17,7 @@ fun <T: Message> T.remoteMessageToSqlite():RoomMessage{
     return RoomMessage(
         uid = this.uid!!,
         name = this.name!!,
-        from = this.from,
-        to = this.to,
+        message = this.message,
         status = this.status,
         timestamp = this.timestamp,
         messageId = this.messageId!!

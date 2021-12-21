@@ -1,25 +1,20 @@
-package com.example.mymessenger.fragments
+package com.example.mymessenger.fragments.contacts
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mymessenger.MyService
-import com.example.mymessenger.adapters.ContactsAdapter
 import com.example.mymessenger.databinding.FragmentContactsBinding
-import com.example.mymessenger.utills.Constants
 import com.example.mymessenger.utills.State
 import com.example.mymessenger.utills.launchWhenStarted
-import com.example.mymessenger.utills.logz
 import com.example.mymessenger.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi

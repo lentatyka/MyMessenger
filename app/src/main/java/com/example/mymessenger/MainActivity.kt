@@ -7,45 +7,39 @@ import android.content.ServiceConnection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
-import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.mymessenger.databinding.ActivityMainBinding
-import com.example.mymessenger.utills.logz
-import com.example.mymessenger.viewmodels.MainViewModel
+import com.example.mymessenger.utills.Contact
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel: MainViewModel by viewModels()
     private lateinit var mService: MyService
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var navController: NavController
+    private lateinit var onDestinationListener: NavController.OnDestinationChangedListener
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MyService.LocalBinder
             mService = binder.getService()
-            _mBound = true
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            _mBound = false
+            destination_.value = null
         }
     }
 
     companion object {
-        private var _mBound: Boolean = false
-        val mBound: Boolean get() = _mBound
+        private val destination_ = MutableStateFlow<Int?>(null)
+        val destination: StateFlow<Int?> = destination_.asStateFlow()
     }
-
-    private var _binding: ActivityMainBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,19 +51,14 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController)
         //Проверяем, был ли старт черех push-уведомление
         navigateToPrivateChatFragment(intent)
-//        startObserveService()
+        onDestinationListener =
+            NavController.OnDestinationChangedListener { _, destination, _ ->
+                destination_.value = destination.id
+            }
+        navController.addOnDestinationChangedListener(
+            onDestinationListener
+        )
     }
-
-//    private fun startObserveService() {
-//        MyService.messages.observe(this) { message ->
-//            //viewmodel отработать message
-//            when (navController.currentDestination!!.id) {
-//                R.id.chatListFragment ->{
-//                    viewModel.updateLastMessage()
-//                }
-//            }
-//        }
-//    }
 
     override fun onStart() {
         super.onStart()
@@ -80,8 +69,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        destination_.value = null
         unbindService(connection)
-        _mBound = false
+        navController.removeOnDestinationChangedListener(onDestinationListener)
     }
 
     override fun onDestroy() {
@@ -101,8 +91,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToPrivateChatFragment(intent: Intent?) {
         if (intent?.action == "TEST") {
-            Log.d("TAG", "navToPrivinner")
-            navController.navigate(R.id.action_global_to_PrivateChatFragment)
+            intent.extras!!.getParcelable<Contact>("contacts").also {
+                val action = NavGraphDirections.actionGlobalToPrivateChatFragment(it!!)
+                navController.navigate(action)
+            }
         }
     }
 }
