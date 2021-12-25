@@ -16,9 +16,15 @@ class RoomRepository @Inject constructor(
 
     fun getLastMessages() = roomDAO.getLastMessages()
 
+    fun getNewMessages(uid: String) = roomDAO.getNewMessages(uid)
+
     fun getChat(uid: String) = roomDAO.getChat(uid)
 
     suspend fun updateStatus(message: RoomMessage){
-        roomDAO.updateStatus(message.status!!, message.messageId!!)
+        roomDAO.updateStatus(message.status!!, message.messageId)
+    }
+
+    suspend fun updateStatus(messages: List<RoomMessage>){
+        roomDAO.updateStatus(messages)
     }
 }

@@ -12,8 +12,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.mymessenger.R
 import com.example.mymessenger.databinding.FragmentLoginBinding
 import com.example.mymessenger.utills.Constants
+import com.example.mymessenger.utills.Constants.USER_NAME
 import com.example.mymessenger.utills.State
 import com.example.mymessenger.utills.launchWhenStarted
+import com.example.mymessenger.utills.logz
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
 
@@ -22,6 +25,13 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by viewModels()
+
+    override fun onStart() {
+        super.onStart()
+//        if(loginViewModel.isSigned()){
+//            navigateToChatList()
+//        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,17 +57,16 @@ class LoginFragment : Fragment() {
                 val password = binding.login.etPassword.text.toString()
                 loginViewModel.signIn(email, password).onEach {state->
                     when(state){
-                        is State.Success ->{
-                            //temp
-                            Constants.USER_NAME = binding.login.test.text.toString()
-                            findNavController()
-                                .navigate(R.id.action_loginFragment_to_chatListFragment)
-                        }
                         is State.Error ->{
+                            "error".logz()
                             showToast(state.exception.toString())
                         }
                         is State.Waiting->{
                             //show loading
+                        }
+                        is State.Success ->{
+                            "state success!".logz()
+                            navigateToChatList()
                         }
                         else->{
                             //nothing
@@ -72,6 +81,12 @@ class LoginFragment : Fragment() {
         binding.login.txtSignup.setOnClickListener {
             setSignUpLayout()
         }
+    }
+
+    private fun navigateToChatList() {
+        findNavController().navigate(
+            LoginFragmentDirections.actionLoginFragmentToChatListFragment()
+        )
     }
 
     private fun setSignUpLayout() {

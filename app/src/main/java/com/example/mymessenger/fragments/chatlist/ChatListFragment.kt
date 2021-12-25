@@ -19,6 +19,7 @@ import com.example.mymessenger.utills.launchWhenStarted
 import com.example.mymessenger.utills.logz
 import com.example.mymessenger.utills.messageToContact
 import com.example.mymessenger.viewmodels.MainViewModel
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
 
@@ -28,6 +29,7 @@ class ChatListFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MainViewModel by activityViewModels()
     private lateinit var chatlistAdapter: ChatListAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

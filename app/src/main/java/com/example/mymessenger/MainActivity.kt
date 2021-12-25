@@ -7,12 +7,18 @@ import android.content.ServiceConnection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.mymessenger.databinding.ActivityMainBinding
+import com.example.mymessenger.fragments.login.LoginViewModel
 import com.example.mymessenger.utills.Contact
+import com.example.mymessenger.utills.logz
+import com.example.mymessenger.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,13 +38,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            destination_.value = null
+            destination_ = null
         }
     }
 
     companion object {
-        private val destination_ = MutableStateFlow<Int?>(null)
-        val destination: StateFlow<Int?> = destination_.asStateFlow()
+        private var destination_:Int? = null
+        val destination: Int? get() = destination_
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,15 +55,20 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.navController
         setupActionBarWithNavController(navController)
+        checkSharedPreferences()
         //Проверяем, был ли старт черех push-уведомление
         navigateToPrivateChatFragment(intent)
         onDestinationListener =
             NavController.OnDestinationChangedListener { _, destination, _ ->
-                destination_.value = destination.id
+                destination_ = destination.id
             }
         navController.addOnDestinationChangedListener(
             onDestinationListener
         )
+    }
+
+    private fun checkSharedPreferences() {
+        val sharedPref = getSharedPreferences(getString(R.string.auth), Context.MODE_PRIVATE) ?: return
     }
 
     override fun onStart() {
@@ -69,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        destination_.value = null
+        destination_ = null
         unbindService(connection)
         navController.removeOnDestinationChangedListener(onDestinationListener)
     }

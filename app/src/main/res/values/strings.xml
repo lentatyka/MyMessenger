@@ -12,4 +12,5 @@
     <string name="sign_up_button">SIGN UP</string>
     <string name="login_str">I already have an account</string>
     <string name="confirm_password">Confirm password</string>
+    <string name="auth">auth</string>
 </resources>

@@ -8,4 +8,5 @@ interface DatabaseInterface {
     suspend fun insert(message: Message)
     suspend fun delete(message: Message)
     suspend fun updateStatus(message: Message, status: MessageStatus)
+    suspend fun getContacts():List<Contact>
 }

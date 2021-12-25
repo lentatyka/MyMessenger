@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymessenger.databinding.FragmentPrivateChatBinding
 import com.example.mymessenger.utills.Constants.CONTACT_ID
 import com.example.mymessenger.utills.launchWhenStarted
+import com.example.mymessenger.utills.logz
 import com.example.mymessenger.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -23,7 +24,7 @@ class PrivateChatFragment : Fragment() {
     private val args: PrivateChatFragmentArgs by navArgs()
     private var _binding: FragmentPrivateChatBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: PrivateChatViewModel by viewModels()
     private lateinit var adapter_: PrivateChatAdapter
 
     override fun onCreateView(
@@ -62,7 +63,8 @@ class PrivateChatFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        viewModel.getPrivateChat(args.contact.uid!!).onEach {
+        viewModel.chat.onEach {
+            "chat here:$it ".logz()
             adapter_.submitList(it)
         }.launchWhenStarted(lifecycleScope)
     }

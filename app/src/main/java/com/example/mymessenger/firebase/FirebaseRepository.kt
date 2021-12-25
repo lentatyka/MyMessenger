@@ -60,7 +60,7 @@ class FirebaseRepository @Inject constructor(
             .child(message.messageId!!).setValue(fb)
     }
 
-    suspend fun getContacts():List<Contact>{
+    override suspend fun getContacts():List<Contact>{
         val answer = reference.child(Constants.USERS_PATH).get().await()
         val contactsList = mutableListOf<Contact>()
         answer.children.forEach {
@@ -84,12 +84,6 @@ class FirebaseRepository @Inject constructor(
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                /*Статус о прочитанном сообщении отслеживаем тут! Пример как WA:
-                одна галочка - сообщение отправлено на сервер
-                две серые галочки - доставлено до абонента
-                две синие галочки - прочитано!
-                В моем примере вместо галочек самолетики :D
-                */
                 snapshot.child("status").value?.let{
                     offer(
                         snapshot.getValue(FirebaseMessage::class.java)!!
@@ -97,22 +91,16 @@ class FirebaseRepository @Inject constructor(
                 }
             }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                Log.d("TAG", "CHILD Removed-> ${snapshot.value}")
-            }
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d("TAG", "CHILD Moved-> ${snapshot.value}")
-            }
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("TAG", "CHILD ERROR-> ${error.code}")
-            }
+            override fun onCancelled(error: DatabaseError) {}
         }
         reference.child(Constants.USER_ID).addChildEventListener(chatListener)
         awaitClose {
             "await called".logz()
-            reference.child(Constants.USER_ID).removeEventListener(chatListener)
+            reference.child(USER_ID).removeEventListener(chatListener)
         }
     }
 }
