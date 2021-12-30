@@ -1,13 +1,11 @@
-package com.example.mymessenger.fragments.contacts
+package com.example.mymessenger.ui.fragments.contacts
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -25,6 +23,7 @@ class ContactsFragment : Fragment() {
     private var _binding: FragmentContactsBinding? = null
     private val binding get() = _binding!!
     lateinit var _adapter: ContactsAdapter
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -35,7 +34,8 @@ class ContactsFragment : Fragment() {
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setAdapter()
@@ -47,18 +47,18 @@ class ContactsFragment : Fragment() {
     private fun setViewModel() {
         viewModel.getContacts().onEach { state->
             when(state){
-                is State.Contacts ->{
+                is State.Object ->{
                     _adapter.setList(state.contacts.toList())
                     binding.loader.visibility = View.GONE
                     binding.contactsRv.visibility = View.VISIBLE
                 }
-                is State.Waiting->{
+                is State.Loading->{
                     binding.loader.visibility = View.VISIBLE
                     binding.contactsRv.visibility = View.GONE
                 }
                 is State.Error->{
                     //Temp for testing
-                    Toast.makeText(context, "Error: ${state.exception.message}", Toast.LENGTH_SHORT).show()
+//
                 }
                 else->{
                     //nothing

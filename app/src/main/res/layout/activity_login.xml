@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+tools:context=".ui.activities.LoginActivity">
+
+<androidx.fragment.app.FragmentContainerView
+    android:layout_margin="16dp"
+    android:id="@+id/nav_host_container"
+    app:navGraph="@navigation/login_graph"
+    app:defaultNavHost="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:name="androidx.navigation.fragment.NavHostFragment"
+    />
+
+</FrameLayout>

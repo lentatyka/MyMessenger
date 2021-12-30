@@ -1,11 +1,10 @@
-package com.example.mymessenger.fragments.privatechat
+package com.example.mymessenger.ui.fragments.privatechat
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -14,7 +13,7 @@ import com.example.mymessenger.databinding.FragmentPrivateChatBinding
 import com.example.mymessenger.utills.Constants.CONTACT_ID
 import com.example.mymessenger.utills.launchWhenStarted
 import com.example.mymessenger.utills.logz
-import com.example.mymessenger.viewmodels.MainViewModel
+import com.example.mymessenger.viewmodels.PrivateChatViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.onEach
@@ -35,7 +34,6 @@ class PrivateChatFragment : Fragment() {
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter_ = PrivateChatAdapter()

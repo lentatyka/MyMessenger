@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/chatListFragment">
 
     <action
         android:id="@+id/action_global_to_PrivateChatFragment"
@@ -12,7 +12,7 @@
 
     <fragment
         android:id="@+id/chatListFragment"
-        android:name="com.example.mymessenger.fragments.chatlist.ChatListFragment"
+        android:name="com.example.mymessenger.ui.fragments.chatlist.ChatListFragment"
         android:label="ChatListFragment"
         tools:layout="@layout/fragment_chatlist" >
         <action
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="com.example.mymessenger.fragments.contacts.ContactsFragment"
+        android:name="com.example.mymessenger.ui.fragments.contacts.ContactsFragment"
         android:label="fragment_contacts"
         tools:layout="@layout/fragment_contacts">
         <action
@@ -35,21 +35,11 @@
     </fragment>
     <fragment
         android:id="@+id/privateChatFragment"
-        android:name="com.example.mymessenger.fragments.privatechat.PrivateChatFragment"
+        android:name="com.example.mymessenger.ui.fragments.privatechat.PrivateChatFragment"
         android:label="fragment_private_chat"
         tools:layout="@layout/fragment_private_chat" >
         <argument
             android:name="contact"
             app:argType="com.example.mymessenger.utills.Contact" />
-    </fragment>
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.mymessenger.fragments.login.LoginFragment"
-        android:label="LoginFragment" >
-        <action
-            android:id="@+id/action_loginFragment_to_chatListFragment"
-            app:destination="@id/chatListFragment"
-            app:popUpTo="@id/chatListFragment"
-            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

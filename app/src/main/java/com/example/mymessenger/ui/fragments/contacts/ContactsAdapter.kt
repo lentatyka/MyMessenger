@@ -1,4 +1,4 @@
-package com.example.mymessenger.fragments.contacts
+package com.example.mymessenger.ui.fragments.contacts
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

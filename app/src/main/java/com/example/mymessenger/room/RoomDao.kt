@@ -25,7 +25,7 @@ interface RoomDao {
     fun getLastMessages(): Flow<List<RoomMessage>>
 
     @Query("UPDATE ${Constants.SQLITE_TABLE_CHAT} SET status =:status WHERE messageId =:id")
-    suspend fun updateStatus(status: MessageStatus, id: String): Int
+    suspend fun updateStatus(status: MessageStatus?, id: String): Int
 
     @Update
     suspend fun updateStatus(messages: List<RoomMessage>):Int

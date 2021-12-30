@@ -5,11 +5,11 @@ import com.example.mymessenger.utills.MessageStatus
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
-data class FirebaseMessage(
-    override val uid: String? = null,
-    override val name: String? =null,
+data class FirebaseMessage constructor(
+    override val uid: String ="",
+    override val name: String ="",
     override val message: String? = null,
     override val status: MessageStatus? = null,
     override val timestamp: Long? = null,
-    override val messageId: String? = null
+    override val messageId: String = "",
 ):Message

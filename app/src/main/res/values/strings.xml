@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MyMessenger</string>
-    <string name="log_in">LOG IN</string>
+    <string name="sign_in">SIGN IN</string>
     <string name="et_email">Email</string>
     <string name="password">password</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -8,9 +8,32 @@
     <string name="enter"><![CDATA[>]]></string>
     <string name="et_password">Password</string>
     <string name="sign_up"><u>sign up!</u></string>
-    <string name="account">"don't have an account? "</string>
+    <string name="account">"don't have an account yet? "</string>
     <string name="sign_up_button">SIGN UP</string>
     <string name="login_str">I already have an account</string>
     <string name="confirm_password">Confirm password</string>
     <string name="auth">auth</string>
+    <string name="et_nickname">Name</string>
+    <string name="error_email_not_verified">Error! Email not verified. Check your email</string>
+    <string name="password_error">Enter password</string>
+    <string name="c_password_error">Passwords must match</string>
+    <string name="nickname_error">Enter name</string>
+    <string name="apply">OK</string>
+    <string name="confirm_email">Congratulations! Confirm your email!</string>
+    <string name="forgot_password">I forgot my password!</string>
+    <string name="sent_email">Email sent</string>
+    <string name="cancel">Cancel</string>
+    <string name="verify_email">Email verification sent</string>
+    <string name="invalid_data">Invalid field data</string>
+    <string name="user_name">username</string>
+    <string name="user_id">userid</string>
+    <string name="preferences">preferences</string>
+    <string name="error_user_not_found">User not found</string>
+    <string name="error_wrong_password">Wrong password</string>
+    <string name="error_unknown">Unknown error. Try later!</string>
+    <string name="error_email_in_use">Email already in use</string>
+    <string name="invalid_password_error">Weak password. Type a-Z 0-9. Minimum 8 symbols. Whitespace no allowed!</string>
+    <string name="send_email">send email</string>
+    <string name="email_error">Enter email</string>
+    <string name="author">M A I</string>
 </resources>

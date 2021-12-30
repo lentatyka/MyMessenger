@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/signin_layout">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/l_email"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/et_email"
+        android:layout_alignParentTop="true"
+        app:endIconMode="clear_text"
+        app:errorEnabled="true"
+        app:startIconContentDescription="@string/et_email"
+        app:startIconDrawable="@drawable/ic_email">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/l_password"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/et_password"
+        android:layout_below="@id/l_email"
+        app:endIconMode="password_toggle"
+        app:errorEnabled="true"
+        app:startIconContentDescription="@string/password"
+        app:startIconDrawable="@drawable/ic_password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btn_sign_in"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/l_password"
+        android:layout_marginTop="16dp"
+        android:focusableInTouchMode="true"
+        android:text="@string/sign_in"
+        app:cornerRadius="24dp"
+        app:shapeAppearance="?attr/waveShape" />
+
+    <LinearLayout
+        android:id="@+id/newuser_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_sign_in"
+        android:layout_marginTop="16dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/account"
+            android:textSize="10pt"
+            tools:text="auth" />
+
+        <TextView
+            android:id="@+id/txt_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up"
+            android:textColor="@color/chat_color"
+            android:textSize="10pt"
+            tools:text="auth" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt_forgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newuser_layout"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/forgot_password"
+        android:textColor="@color/purple_500"
+        android:textSize="10pt" />
+
+    <TextView
+        android:id="@+id/txt_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="16dp"
+        android:text="@string/author"
+        android:textStyle="italic"
+        android:textColor="@color/black"
+        android:textSize="10pt" />
+
+</RelativeLayout>

@@ -1,5 +1,7 @@
 package com.example.mymessenger.room
 
+import com.example.mymessenger.utills.logz
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RoomRepository @Inject constructor(
@@ -21,7 +23,7 @@ class RoomRepository @Inject constructor(
     fun getChat(uid: String) = roomDAO.getChat(uid)
 
     suspend fun updateStatus(message: RoomMessage){
-        roomDAO.updateStatus(message.status!!, message.messageId)
+        roomDAO.updateStatus(message.status, message.messageId)
     }
 
     suspend fun updateStatus(messages: List<RoomMessage>){
