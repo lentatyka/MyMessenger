@@ -1,28 +1,25 @@
 package com.example.mymessenger.firebase
 
 
-import android.util.Log
 import com.example.mymessenger.interfaces.DatabaseInterface
 import com.example.mymessenger.interfaces.Message
-import com.example.mymessenger.utills.Constants
+import com.example.mymessenger.utills.Constants.USERS_PATH
 import com.example.mymessenger.utills.Constants.USER_ID
-import com.example.mymessenger.utills.Constants.USER_NAME
-import com.example.mymessenger.utills.Contact
+import com.example.mymessenger.room.Contact
 import com.example.mymessenger.utills.MessageStatus
-import com.example.mymessenger.utills.logz
-import com.google.firebase.auth.FirebaseAuth
+import com.example.mymessenger.viewmodels.LoginViewModel
+import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
+import java.io.IOException
 import javax.inject.Inject
 
 class FirebaseRepository @Inject constructor(
-    private val reference: DatabaseReference
+    private val reference: DatabaseReference,
+    private val storage: StorageReference
 ) : DatabaseInterface {
-    override suspend fun insert(uid: String, message: Message) {
+    override suspend fun insertMessage(uid: String, message: Message) {
         reference.child(uid)
             .child(message.messageId)
             .setValue(
@@ -30,13 +27,13 @@ class FirebaseRepository @Inject constructor(
             )
     }
 
-    override suspend fun delete(message: Message) {
+    override suspend fun deleteMessage(message: Message) {
         (message as FirebaseMessage).apply {
             reference.child(USER_ID).child(this.messageId).removeValue()
         }
     }
 
-    override suspend fun updateStatus(message: Message, status: MessageStatus) {
+    override suspend fun updateMessage(message: Message, status: MessageStatus) {
         val fb = FirebaseMessage(
             uid = message.uid,
             name = message.name,
@@ -50,15 +47,53 @@ class FirebaseRepository @Inject constructor(
     }
 
     override suspend fun getContacts(): List<Contact> {
-        val answer = reference.child(Constants.USERS_PATH).get().await()
-        val contactsList = mutableListOf<Contact>()
-        answer.children.forEach {
-            it.getValue(Contact::class.java)?.let { contact ->
-                if (contact.uid != USER_ID)
-                    contactsList += contact
+        try{
+            val contacts = reference.child(USERS_PATH).get().await()
+            val contactsList = mutableListOf<Contact>()
+            contacts.children.forEach { snapshot ->
+                snapshot.getValue(Contact::class.java)?.let { contact ->
+                    if (contact.uid != USER_ID){
+                        contact.copy(
+                            avatar = getFile(contact.uid!!)
+                        ).also {
+                            contactsList += it
+                        }
+                    }
+                }
             }
+            return contactsList
+        }catch (e: FirebaseException){
+            throw DatabaseException(LoginViewModel.ERROR_UNKNOWN)
         }
-        return contactsList
+    }
+
+    override suspend fun insertFile() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateFile() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteFile() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getFile(uid: String): ByteArray? {
+        return try{
+            storage.child("$uid.jpg").getBytes(Long.MAX_VALUE).await()
+        }catch (e: IOException){
+            null
+        }
+    }
+
+    override fun loadAvatar(uri: String, callback: (ByteArray?)->Unit) {
+        storage.child("$uri.jpg").getBytes(Long.MAX_VALUE).addOnCompleteListener {
+            if(it.isSuccessful)
+                callback(it.result!!)
+            else
+                callback(null)
+        }
     }
 
     fun addChatListener(callback: (Message) -> Unit) {

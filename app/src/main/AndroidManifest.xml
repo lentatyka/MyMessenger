@@ -11,12 +11,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyMessenger">
         <activity
+            android:name=".ui.fragments.contacts.ContactsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.fragments.privatechat.PrivateChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.fragments.chatlist.ChatsActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".services.NotificationService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
             android:name=".ui.activities.BaseActivity"
-            android:theme="@android:style/Theme.NoDisplay"
             android:exported="true"
-            android:launchMode="standard">
+            android:launchMode="standard"
+            android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -26,15 +42,14 @@
             android:launchMode="singleTask" />
 
         <service
-            android:name=".MyService"
+            android:name=".services.DatabaseService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
             android:name=".ui.activities.MainActivity"
             android:exported="true"
-            android:launchMode="singleTask">
-        </activity>
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>

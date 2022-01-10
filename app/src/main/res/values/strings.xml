@@ -36,4 +36,8 @@
     <string name="send_email">send email</string>
     <string name="email_error">Enter email</string>
     <string name="author">M A I</string>
+    <string name="message">Message</string>
+    <string name="avatar">avatar</string>
+    <string name="chats">Chats</string>
+    <string name="contacts">Contacts</string>
 </resources>

@@ -30,8 +30,12 @@
         <action
             android:id="@+id/action_contactsFragment_to_privateChatFragment"
             app:destination="@id/privateChatFragment"
+            app:launchSingleTop="true"
             app:popUpTo="@id/chatListFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_contactsFragment_to_chatListFragment"
+            app:destination="@id/chatListFragment" />
     </fragment>
     <fragment
         android:id="@+id/privateChatFragment"
@@ -40,6 +44,9 @@
         tools:layout="@layout/fragment_private_chat" >
         <argument
             android:name="contact"
-            app:argType="com.example.mymessenger.utills.Contact" />
+            app:argType="com.example.mymessenger.room.Contact" />
+        <action
+            android:id="@+id/action_privateChatFragment_to_chatListFragment"
+            app:destination="@id/chatListFragment" />
     </fragment>
 </navigation>

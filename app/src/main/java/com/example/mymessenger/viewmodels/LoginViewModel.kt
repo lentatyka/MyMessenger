@@ -2,15 +2,13 @@ package com.example.mymessenger.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mymessenger.firebase.AuthenticationException
-import com.example.mymessenger.firebase.FirebaseAuthentication
+import com.example.mymessenger.firebase.DatabaseException
 import com.example.mymessenger.interfaces.Authenticator
 import com.example.mymessenger.utills.Constants.USER_ID
 import com.example.mymessenger.utills.Constants.USER_NAME
 import com.example.mymessenger.utills.State
 import com.example.mymessenger.utills.isValidEmail
 import com.example.mymessenger.utills.isValidPassword
-import com.example.mymessenger.utills.logz
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -41,7 +39,7 @@ class LoginViewModel @Inject constructor(
                 USER_ID = it.uid
                 emit(State.Success)
             }
-        }catch (e: AuthenticationException){
+        }catch (e: DatabaseException){
             emit(State.Error(e))
         }
     }
@@ -55,7 +53,7 @@ class LoginViewModel @Inject constructor(
         try{
             auth.signUp(email, password, nickname)
             emit(State.Success)
-        }catch (e: AuthenticationException){
+        }catch (e: DatabaseException){
             emit(State.Error(e))
         }
     }
@@ -85,7 +83,7 @@ class LoginViewModel @Inject constructor(
             try {
                 auth.resetPassword(email)
                 emit(State.Success)
-            }catch (e:AuthenticationException){
+            }catch (e:DatabaseException){
                 emit(State.Error(e))
             }
     }

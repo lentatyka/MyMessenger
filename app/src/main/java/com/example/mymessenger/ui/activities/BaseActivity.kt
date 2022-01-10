@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.example.mymessenger.R
+import com.example.mymessenger.ui.fragments.chatlist.ChatsActivity
 import com.example.mymessenger.utills.Constants.USER_ID
 import com.example.mymessenger.utills.Constants.USER_NAME
 import com.example.mymessenger.utills.logz
@@ -21,7 +22,7 @@ class BaseActivity : Activity() {
                 getString(getString(R.string.user_id), null)?.let {
                     USER_ID = it
                 }
-                launchActivity(MainActivity::class.java)
+                launchActivity(ChatsActivity::class.java)
             }else{
                 launchActivity(LoginActivity::class.java)
             }
@@ -30,9 +31,9 @@ class BaseActivity : Activity() {
 
     private fun <T: Activity> launchActivity(activity: Class<T>) {
         Intent(this, activity).also { intent->
-//            intent.addFlags(
-//                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-//            )
+            intent.addFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            )
             startActivity(intent)
             finish()
         }

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.mymessenger.R
 import com.example.mymessenger.interfaces.Message
+import com.example.mymessenger.room.Contact
 import com.example.mymessenger.room.RoomMessage
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -62,10 +63,11 @@ fun <T: Message> T.remoteMessageToSqlite():RoomMessage{
     )
 }
 
-fun <T: Message>T.messageToContact():Contact =
+fun <T: Message>T.messageToContact(): Contact =
     Contact(
         uid = this.uid,
-        nickname = this.name
+        nickname = this.name,
+        info = this.message
     )
 
 fun getCurrentTime():Long = System.currentTimeMillis()

@@ -1,11 +1,14 @@
 package com.example.mymessenger.ui.fragments.contacts
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.mymessenger.R
 import com.example.mymessenger.databinding.ContactsItemBinding
-import com.example.mymessenger.utills.Contact
+import com.example.mymessenger.room.Contact
 
 class ContactsAdapter(
     private val callback:(Contact)->Unit
@@ -42,8 +45,13 @@ class ContactsAdapter(
         fun bind(item: Contact?){
             item?.let {
                 binding.apply {
-                    contactNameTv.text = item.nickname ?: "Contact"
+                    contactNameTv.text = item.nickname
                     emailTv.text = item.email
+                    Glide.with(itemView)
+                        .load(item.avatar)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_avatar)
+                        .into(contactIv)
                 }
                 itemView.setOnClickListener{
                     callback(item)
