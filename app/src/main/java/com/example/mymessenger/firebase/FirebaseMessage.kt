@@ -7,9 +7,8 @@ import com.google.firebase.database.IgnoreExtraProperties
 @IgnoreExtraProperties
 data class FirebaseMessage constructor(
     override val uid: String ="",
-    override val name: String ="",
     override val message: String? = null,
     override val status: MessageStatus? = null,
     override val timestamp: Long? = null,
-    override val messageId: String = "",
+    override val messageId: String = ""
 ):Message

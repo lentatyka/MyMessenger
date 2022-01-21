@@ -6,29 +6,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="8dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+    <RelativeLayout
+        android:id="@+id/avatar_layout"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
         android:layout_marginStart="8dp"
-        android:elevation="12dp"
-        android:innerRadius="0dp"
-        android:shape="ring"
-        android:thicknessRatio="1.9"
-        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/contact_iv"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/avatar_card"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
+            android:layout_height="match_parent"
+            android:elevation="12dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_launcher_background" />
-    </androidx.cardview.widget.CardView>
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            app:cardCornerRadius="20dp">
+            <ImageView
+                android:id="@+id/contact_iv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_avatar" />
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/contact_name_tv"
@@ -38,7 +40,7 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/card_view"
+        app:layout_constraintStart_toEndOf="@+id/avatar_layout"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Contact" />
 

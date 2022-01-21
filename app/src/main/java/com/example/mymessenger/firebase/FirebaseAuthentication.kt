@@ -2,7 +2,6 @@ package com.example.mymessenger.firebase
 
 import com.example.mymessenger.interfaces.Authenticator
 import com.example.mymessenger.utills.Constants.USERS_PATH
-import com.example.mymessenger.room.Contact
 import com.example.mymessenger.viewmodels.LoginViewModel.Companion.ERROR_EMAIL_ALREADY_IN_USE
 import com.example.mymessenger.viewmodels.LoginViewModel.Companion.ERROR_EMAIL_NOT_VERIFIED
 import com.example.mymessenger.viewmodels.LoginViewModel.Companion.ERROR_UNKNOWN
@@ -10,12 +9,15 @@ import com.example.mymessenger.viewmodels.LoginViewModel.Companion.ERROR_USER_NO
 import com.example.mymessenger.viewmodels.LoginViewModel.Companion.ERROR_WRONG_PASSWORD
 import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirebaseAuthentication @Inject constructor(
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val storage: StorageReference
 ):Authenticator<FirebaseUser?> {
 
     override suspend fun signIn(email: String, password: String):FirebaseUser?{
@@ -35,7 +37,8 @@ class FirebaseAuthentication @Inject constructor(
     override suspend fun signUp(
         email: String,
         password: String,
-        nickname: String
+        nickname: String,
+        avatar: ByteArray
     ){
         try {
             val result =  auth.createUserWithEmailAndPassword(email, password).await()
@@ -47,7 +50,16 @@ class FirebaseAuthentication @Inject constructor(
                 FirebaseDatabase.getInstance().reference
                     .child(USERS_PATH)
                     .child(newUser.uid)
-                    .setValue(Contact(newUser.uid, newUser.email!!, nickname))
+                    .setValue(
+                        FirebaseContact(
+                            uid = newUser.uid,
+                            email = newUser.email!!,
+                            nickname = nickname,
+                            avatar = null,
+                            info = null
+                        )
+                    )
+                storage.child(newUser.uid).putBytes(avatar)
             }
         }catch (e: FirebaseAuthException){
             throw DatabaseException(

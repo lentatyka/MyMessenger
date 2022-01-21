@@ -5,12 +5,15 @@ import com.example.mymessenger.interfaces.DatabaseInterface
 import com.example.mymessenger.interfaces.Message
 import com.example.mymessenger.utills.Constants.USERS_PATH
 import com.example.mymessenger.utills.Constants.USER_ID
-import com.example.mymessenger.room.Contact
 import com.example.mymessenger.utills.MessageStatus
+import com.example.mymessenger.utills.logz
 import com.example.mymessenger.viewmodels.LoginViewModel
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
 import java.io.IOException
 import javax.inject.Inject
@@ -19,7 +22,9 @@ class FirebaseRepository @Inject constructor(
     private val reference: DatabaseReference,
     private val storage: StorageReference
 ) : DatabaseInterface {
-    override suspend fun insertMessage(uid: String, message: Message) {
+
+
+    @Synchronized override fun insertMessage(uid: String, message: Message) {
         reference.child(uid)
             .child(message.messageId)
             .setValue(
@@ -36,7 +41,6 @@ class FirebaseRepository @Inject constructor(
     override suspend fun updateMessage(message: Message, status: MessageStatus) {
         val fb = FirebaseMessage(
             uid = message.uid,
-            name = message.name,
             status = status,
             messageId = message.messageId,
             message = null,
@@ -46,15 +50,15 @@ class FirebaseRepository @Inject constructor(
             .child(message.messageId).setValue(fb)
     }
 
-    override suspend fun getContacts(): List<Contact> {
+    override suspend fun getContacts(filter: List<String>): List<FirebaseContact> {
         try{
             val contacts = reference.child(USERS_PATH).get().await()
-            val contactsList = mutableListOf<Contact>()
+            val contactsList = mutableListOf<FirebaseContact>()
             contacts.children.forEach { snapshot ->
-                snapshot.getValue(Contact::class.java)?.let { contact ->
-                    if (contact.uid != USER_ID){
+                snapshot.getValue(FirebaseContact::class.java)?.let { contact ->
+                    if (contact.uid != USER_ID && !filter.contains(contact.uid)){
                         contact.copy(
-                            avatar = getFile(contact.uid!!)
+                            avatar = getFile(contact.uid)
                         ).also {
                             contactsList += it
                         }
@@ -62,6 +66,19 @@ class FirebaseRepository @Inject constructor(
                 }
             }
             return contactsList
+        }catch (e: FirebaseException){
+            throw DatabaseException(LoginViewModel.ERROR_UNKNOWN)
+        }
+    }
+
+    override suspend fun getContact(uid: String): FirebaseContact? {
+        try{
+            val answer = reference.child(USERS_PATH).child(uid).get().await()
+            answer.getValue(FirebaseContact::class.java)?.let {
+                return it.copy(
+                    avatar = getFile(uid)
+                )
+            } ?: return null
         }catch (e: FirebaseException){
             throw DatabaseException(LoginViewModel.ERROR_UNKNOWN)
         }
@@ -81,37 +98,26 @@ class FirebaseRepository @Inject constructor(
 
     override suspend fun getFile(uid: String): ByteArray? {
         return try{
-            storage.child("$uid.jpg").getBytes(Long.MAX_VALUE).await()
+            storage.child(uid).getBytes(Long.MAX_VALUE).await()
         }catch (e: IOException){
             null
         }
     }
 
-    override fun loadAvatar(uri: String, callback: (ByteArray?)->Unit) {
-        storage.child("$uri.jpg").getBytes(Long.MAX_VALUE).addOnCompleteListener {
-            if(it.isSuccessful)
-                callback(it.result!!)
-            else
-                callback(null)
-        }
-    }
+
 
     fun addChatListener(callback: (Message) -> Unit) {
         reference.child(USER_ID).addChildEventListener(object : ChildEventListener {
             //Отфильтровываем только сообщения от пользователя ((from != null)).
             //Сообщения, отправленные пользователю отслеживаются в методе onChildChanged!
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                snapshot.child("message").value?.let {
-                    callback(snapshot.getValue(FirebaseMessage::class.java)!!)
-                }
+                callback(snapshot.getValue(FirebaseMessage::class.java)!!)
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                snapshot.child("status").value?.let {
-                    callback(
+                callback(
                         snapshot.getValue(FirebaseMessage::class.java)!!
-                    )
-                }
+                )
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {}

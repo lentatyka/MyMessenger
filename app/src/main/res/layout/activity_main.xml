@@ -7,7 +7,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.activities.MainActivity">
 
-    <include layout="@layout/toolbar"/>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        style="@style/Toolbar"/>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_container"

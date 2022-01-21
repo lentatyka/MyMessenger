@@ -24,29 +24,51 @@
     </fragment>
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="com.example.mymessenger.ui.fragments.contacts.ContactsFragment"
+        android:name="com.example.mymessenger.ui.fragments.contacts.FriendListFragment"
         android:label="fragment_contacts"
-        tools:layout="@layout/fragment_contacts">
+        tools:layout="@layout/fragment_friendlist">
         <action
             android:id="@+id/action_contactsFragment_to_privateChatFragment"
             app:destination="@id/privateChatFragment"
-            app:launchSingleTop="true"
             app:popUpTo="@id/chatListFragment"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_contactsFragment_to_chatListFragment"
-            app:destination="@id/chatListFragment" />
+            app:destination="@id/chatListFragment"
+            app:popUpTo="@id/chatListFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_contactsFragment_to_contactsFragment2"
+            app:destination="@id/contactsFragment2" />
     </fragment>
     <fragment
         android:id="@+id/privateChatFragment"
         android:name="com.example.mymessenger.ui.fragments.privatechat.PrivateChatFragment"
         android:label="fragment_private_chat"
         tools:layout="@layout/fragment_private_chat" >
-        <argument
-            android:name="contact"
-            app:argType="com.example.mymessenger.room.Contact" />
         <action
             android:id="@+id/action_privateChatFragment_to_chatListFragment"
-            app:destination="@id/chatListFragment" />
+            app:destination="@id/chatListFragment"
+            app:popUpTo="@id/chatListFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="contact"
+            app:argType="com.example.mymessenger.interfaces.Contact" />
+    </fragment>
+    <fragment
+        android:id="@+id/contactsFragment2"
+        android:name="com.example.mymessenger.ui.fragments.contacts.ContactsFragment"
+        android:label="fragment_contacts"
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_contactsFragment2_to_contactsFragment"
+            app:destination="@id/contactsFragment"
+            app:popUpTo="@id/contactsFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_contactsFragment2_to_privateChatFragment"
+            app:destination="@id/privateChatFragment"
+            app:popUpTo="@id/chatListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

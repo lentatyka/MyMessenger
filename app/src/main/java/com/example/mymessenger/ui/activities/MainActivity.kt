@@ -8,6 +8,9 @@ import android.content.ServiceConnection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import android.view.LayoutInflater
+import android.widget.TextView
+import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -15,6 +18,7 @@ import com.example.mymessenger.services.DatabaseService
 import com.example.mymessenger.NavGraphDirections
 import com.example.mymessenger.R
 import com.example.mymessenger.databinding.ActivityMainBinding
+import com.example.mymessenger.interfaces.Contact
 import com.example.mymessenger.services.NotificationService
 import com.example.mymessenger.utills.Constants.ACTION_START_SERVICE
 import com.example.mymessenger.utills.Constants.ACTION_STOP_SERVICE
@@ -22,11 +26,9 @@ import com.example.mymessenger.utills.Constants.CONTACT
 import com.example.mymessenger.utills.Constants.CONTACT_ID
 import com.example.mymessenger.utills.Constants.NEW_MESSAGE
 import com.example.mymessenger.utills.Constants.START_PRIVATE_CHAT
-import com.example.mymessenger.room.Contact
-import com.example.mymessenger.ui.fragments.contacts.ContactsFragmentDirections
-import com.example.mymessenger.ui.fragments.privatechat.PrivateChatFragmentDirections
 import com.example.mymessenger.utills.launchWhenStarted
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
@@ -63,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         //setupActionBarWithNavController(navController)
         //Проверяем, был ли старт черех push-уведомление
         navigateToPrivateChatFragment(intent)
+        setToolbar()
     }
 
     override fun onStart() {
@@ -130,8 +133,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.contactsFragment ->
                         startNotification(contact)
-                    else -> {
-                        //nothing
+                    R.id.chatListFragment -> {
                     }
                 }
             }
@@ -146,21 +148,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        navController.currentDestination?.let {
-            when(it.id){
-                R.id.privateChatFragment ->
-                    navController.navigate(
-                        PrivateChatFragmentDirections.actionPrivateChatFragmentToChatListFragment()
-                    )
-                R.id.contactsFragment ->
-                    navController.navigate(
-                        ContactsFragmentDirections.actionContactsFragmentToChatListFragment()
-                    )
-                R.id.chatListFragment ->
-                    this.finish()
-            }
+    private fun setToolbar(){
+        setSupportActionBar(binding.toolbar)
+        val view =  layoutInflater.inflate(R.layout.main_toolbar, null)
+        supportActionBar?.let {
+            it.setDisplayShowTitleEnabled(false)
+            it.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+            it.setDisplayShowCustomEnabled(true)
+            it.customView = view
         }
     }
 }

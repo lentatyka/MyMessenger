@@ -4,10 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.example.mymessenger.R
-import com.example.mymessenger.ui.fragments.chatlist.ChatsActivity
 import com.example.mymessenger.utills.Constants.USER_ID
 import com.example.mymessenger.utills.Constants.USER_NAME
-import com.example.mymessenger.utills.logz
 
 class BaseActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +20,7 @@ class BaseActivity : Activity() {
                 getString(getString(R.string.user_id), null)?.let {
                     USER_ID = it
                 }
-                launchActivity(ChatsActivity::class.java)
+                launchActivity(MainActivity::class.java)
             }else{
                 launchActivity(LoginActivity::class.java)
             }

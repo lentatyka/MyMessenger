@@ -12,8 +12,6 @@ data class RoomMessage(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "messageId")
     override val messageId: String,
-    @ColumnInfo(name = "username")
-    override val name: String,
     @ColumnInfo(name="uid")
     override val uid: String,
     @ColumnInfo(name="message")

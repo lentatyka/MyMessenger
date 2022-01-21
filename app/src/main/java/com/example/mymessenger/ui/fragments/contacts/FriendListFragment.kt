@@ -11,26 +11,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymessenger.R
-import com.example.mymessenger.databinding.FragmentContactsBinding
-import com.example.mymessenger.interfaces.Contact
+import com.example.mymessenger.databinding.FragmentFriendlistBinding
+import com.example.mymessenger.room.RoomContact
 import com.example.mymessenger.ui.activities.MainActivity
 import com.example.mymessenger.ui.fragments.chatlist.ViewType
-import com.example.mymessenger.utills.State
 import com.example.mymessenger.utills.launchWhenStarted
-import com.example.mymessenger.utills.logz
-import com.example.mymessenger.utills.showToast
 import com.example.mymessenger.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class ContactsFragment : Fragment() {
-    private var _binding: FragmentContactsBinding? = null
+class FriendListFragment : Fragment() {
+    private var _binding: FragmentFriendlistBinding? = null
     private val binding get() = _binding!!
     private lateinit var _adapter: ContactsAdapter
     private lateinit var _menu: Menu
-    private var contacts = mutableListOf<Contact>()
+    private var contacts = mutableListOf<RoomContact>()
     private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -40,63 +38,9 @@ class ContactsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentContactsBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentFriendlistBinding.inflate(layoutInflater, container, false)
         setToolbar()
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setAdapter()
-        setViewModel()
-    }
-
-    private fun setViewModel() {
-        viewModel.findContacts().onEach { state->
-            when(state){
-                is State.Object ->{
-                    _adapter.setList(state.contacts.toList())
-                    binding.loader.visibility = View.GONE
-                    binding.contactsRv.visibility = View.VISIBLE
-                }
-                is State.Loading->{
-                    binding.loader.visibility = View.VISIBLE
-                    binding.contactsRv.visibility = View.GONE
-                }
-                is State.Error->{
-                    binding.loader.visibility = View.GONE
-                    getString(R.string.error_unknown).showToast(requireContext())
-                }
-                else->{
-                    //nothing
-                }
-            }
-        }.launchWhenStarted(lifecycleScope)
-    }
-    private fun setAdapter() {
-        _adapter = ContactsAdapter{contact, viewtype, isChanged->
-            when(viewtype){
-                ViewType.CHAT -> {
-                    findNavController().navigate(
-                        ContactsFragmentDirections.actionContactsFragment2ToPrivateChatFragment(
-                            contact
-                        )
-                    )
-                }
-                ViewType.ADD_CONTACT ->{
-                    if(isChanged){
-                        contacts += contact
-                    }else
-                        contacts -= contact
-                    _menu.findItem(R.id.item_add).isVisible = contacts.isNotEmpty()
-                }
-            }
-        }
-        binding.contactsRv.apply {
-            layoutManager = LinearLayoutManager(this.context)
-            addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
-            adapter = _adapter
-        }
     }
 
     private fun setToolbar() {
@@ -104,7 +48,53 @@ class ContactsFragment : Fragment() {
             it.setDisplayHomeAsUpEnabled(true)
             val view = it.customView
             view.findViewById<CardView>(R.id.avatar_card).visibility = View.GONE
-            view.findViewById<TextView>(R.id.title_tv).text = getString(R.string.contacts)
+            view.findViewById<TextView>(R.id.title_tv).text = getString(R.string.friends)
+        }
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setAdapter()
+        setViewModel()
+        binding.btnFindContact.setOnClickListener {
+            findNavController().navigate(
+                FriendListFragmentDirections.actionContactsFragmentToContactsFragment2()
+            )
+        }
+    }
+
+    private fun setViewModel() {
+        viewModel.getFriendList().onEach { state->
+                _adapter.setList(state)
+        }.launchWhenStarted(lifecycleScope)
+    }
+
+    private fun setAdapter() {
+        _adapter = ContactsAdapter{contact, viewtype, isChanged->
+            when(viewtype){
+                ViewType.CHAT ->{
+                    findNavController().navigate(
+                        FriendListFragmentDirections.actionContactsFragmentToPrivateChatFragment(
+                            contact
+                        )
+                    )
+                }
+                ViewType.REMOVE_CONTACT ->{
+                    contact as RoomContact
+                    if(isChanged){
+                        contacts += contact
+                    }else
+                        contacts -= contact
+                    _menu.findItem(R.id.item_delete).isVisible = contacts.isNotEmpty()
+                }
+            }
+        }
+
+        binding.contactsRv.apply {
+            layoutManager = LinearLayoutManager(this.context)
+            addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+            adapter = _adapter
         }
     }
 
@@ -117,16 +107,11 @@ class ContactsFragment : Fragment() {
         when(item.itemId){
             android.R.id.home ->{
                 findNavController().navigate(
-                    ContactsFragmentDirections.actionContactsFragment2ToContactsFragment()
+                    FriendListFragmentDirections.actionContactsFragmentToChatListFragment()
                 )
             }
-            R.id.item_add ->{
-//                newContact?.let {
-//                    viewModel.addContactToFriend(it)
-//                    findNavController().navigate(
-//                        ContactsFragmentDirections.actionContactsFragment2ToContactsFragment()
-//                    )
-//                }
+            R.id.item_delete ->{
+                viewModel.deleteContacts(contacts)
             }
         }
         return true

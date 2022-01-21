@@ -1,7 +1,8 @@
 package com.example.mymessenger.room
 
+import androidx.room.Transaction
+import com.example.mymessenger.interfaces.Contact
 import com.example.mymessenger.utills.logz
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RoomRepository @Inject constructor(
@@ -16,6 +17,12 @@ class RoomRepository @Inject constructor(
         roomDAO.deleteChat(uid)
     }
 
+    suspend fun checkNewMessages(uid: String) = roomDAO.checkNewMessages(uid)
+
+    suspend fun insertMessages(messages: List<RoomMessage>){
+        roomDAO.insertMessages(messages)
+    }
+
     fun getLastMessages() = roomDAO.getLastMessages()
 
     fun getNewMessages(uid: String) = roomDAO.getNewMessages(uid)
@@ -26,7 +33,14 @@ class RoomRepository @Inject constructor(
         roomDAO.updateStatus(message.status, message.messageId)
     }
 
-    suspend fun updateStatus(messages: List<RoomMessage>){
-        roomDAO.updateStatus(messages)
+    fun getChatList() = roomDAO.getChatList()
+    suspend fun insertContact(roomContact: RoomContact){
+        roomDAO.insertContact(roomContact)
     }
+    suspend fun getContact(uid: String) = roomDAO.getContact(uid)
+    fun getContacts() = roomDAO.getContacts()
+    suspend fun deleteContact(contacts: List<RoomContact>) {
+        roomDAO.deleteContactAndChat(contacts)
+    }
+
 }

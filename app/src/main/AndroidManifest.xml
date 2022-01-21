@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mymessenger">
 
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -10,15 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyMessenger">
-        <activity
-            android:name=".ui.fragments.contacts.ContactsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.fragments.privatechat.PrivateChatActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.fragments.chatlist.ChatsActivity"
-            android:exported="false" />
 
         <service
             android:name=".services.NotificationService"

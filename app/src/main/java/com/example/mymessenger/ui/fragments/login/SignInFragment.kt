@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -28,6 +31,7 @@ class SignInFragment : Fragment() {
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +42,7 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setViewModel()
         setSignInLayout()
     }
 
@@ -60,42 +65,46 @@ class SignInFragment : Fragment() {
                 if(checkSignInFields()){
                     val email = binding.etEmail.text.toString()
                     val password = binding.etPassword.text.toString()
-                    loginViewModel.signIn(email, password).onEach {state->
-                        when(state){
-                            is State.Error ->{
-                                when(state.error.errorCode){
-                                    ERROR_USER_NOT_FOUND ->
-                                        binding.lEmail.error = getString(R.string.error_user_not_found)
-                                    ERROR_EMAIL_NOT_VERIFIED ->
-                                        getString(R.string.error_email_not_verified).showSnackBar(binding.root){
-                                            loginViewModel.sendEmailVerification()
-                                            getString(R.string.sent_email).showToast(requireContext())
-                                        }
-                                    ERROR_WRONG_PASSWORD ->{
-                                        binding.also {
-                                            it.etPassword.text?.clear()
-                                            it.lPassword.error = getString(R.string.error_wrong_password)
-                                        }
-                                    }
-                                    else-> getString(R.string.error_unknown).showToast(requireContext())
-                                }
-                            }
-                            is State.Loading->{
-                                //show loading
-                            }
-                            is State.Success ->{
-                                navigateToChatList()
-                            }
-                            else->{
-                                //nothing
-                            }
-                        }
-                    }.launchWhenStarted(lifecycleScope)
+                    loginViewModel.signIn(email, password)
                 }else{
                     getString(R.string.invalid_data).showToast(requireContext())
                 }
             }
         }
+    }
+
+    private fun setViewModel(){
+        loginViewModel.state.onEach {state->
+            when(state){
+                is State.Error ->{
+                    when(state.error.errorCode){
+                        ERROR_USER_NOT_FOUND ->
+                            binding.lEmail.error = getString(R.string.error_user_not_found)
+                        ERROR_EMAIL_NOT_VERIFIED ->
+                            getString(R.string.error_email_not_verified).showSnackBar(binding.root){
+                                loginViewModel.sendEmailVerification()
+                                getString(R.string.sent_email).showToast(requireContext())
+                            }
+                        ERROR_WRONG_PASSWORD ->{
+                            binding.also {
+                                it.etPassword.text?.clear()
+                                it.lPassword.error = getString(R.string.error_wrong_password)
+                            }
+                        }
+                        else-> getString(R.string.error_unknown).showToast(requireContext())
+                    }
+                }
+                is State.Loading->{
+                    //show loading
+                }
+                is State.Success ->{
+                    navigateToChatList()
+                }
+                else->{
+                    //nothing
+                }
+            }
+        }.launchWhenStarted(lifecycleScope)
     }
 
     private fun navigateToChatList() {
@@ -106,6 +115,9 @@ class SignInFragment : Fragment() {
             apply()
         }
         val intent = Intent(context, MainActivity::class.java)
+        intent.addFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        )
         startActivity(intent)
     }
 
@@ -118,5 +130,10 @@ class SignInFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        loginViewModel.setState(State.Waiting)
     }
 }

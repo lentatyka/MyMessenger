@@ -40,4 +40,12 @@
     <string name="avatar">avatar</string>
     <string name="chats">Chats</string>
     <string name="contacts">Contacts</string>
+    <string name="avatar_error">Add avatar!</string>
+    <string name="accept">OK</string>
+    <string name="contact_add">Add contact to friends?</string>
+    <string name="chat_delete">Delete chat?</string>
+    <string name="c_add">Add</string>
+    <string name="c_delete">Delete</string>
+    <string name="clear">Clear chat</string>
+    <string name="friends">Friends</string>
 </resources>

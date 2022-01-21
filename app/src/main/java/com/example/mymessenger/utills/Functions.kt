@@ -7,8 +7,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.mymessenger.R
+import com.example.mymessenger.firebase.FirebaseContact
+import com.example.mymessenger.interfaces.Contact
 import com.example.mymessenger.interfaces.Message
-import com.example.mymessenger.room.Contact
+import com.example.mymessenger.room.RoomContact
 import com.example.mymessenger.room.RoomMessage
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -55,7 +57,6 @@ fun Long.convertLongToTime() = SimpleDateFormat("h:mm a").format(this).toString(
 fun <T: Message> T.remoteMessageToSqlite():RoomMessage{
     return RoomMessage(
         uid = this.uid,
-        name = this.name,
         message = this.message,
         status = status,
         timestamp = this.timestamp,
@@ -63,11 +64,21 @@ fun <T: Message> T.remoteMessageToSqlite():RoomMessage{
     )
 }
 
-fun <T: Message>T.messageToContact(): Contact =
-    Contact(
+fun <T: Message>T.messageToContact():FirebaseContact =
+    FirebaseContact(
         uid = this.uid,
-        nickname = this.name,
+        email = "",
+        avatar = null,
         info = this.message
+    )
+
+fun <T: Contact>T.contactToRoomContact():RoomContact =
+    RoomContact(
+        uid = this.uid!!,
+        nickname = this.nickname!!,
+        email = this.email!!,
+        avatar = this.avatar,
+        info = null
     )
 
 fun getCurrentTime():Long = System.currentTimeMillis()
