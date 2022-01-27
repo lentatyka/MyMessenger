@@ -100,6 +100,9 @@ class SignUpFragment : Fragment() {
                     etPassword.text.toString()
                 )
             }
+            cameraLayout.fakeBtn.setOnClickListener {
+                hideCameraPanel()
+            }
             setAvatar(loginViewModel.getAvatar())
 
             val imageAssets = resources.assets.list("avatars")
@@ -129,11 +132,11 @@ class SignUpFragment : Fragment() {
                 }
             }
 
-            cameraPanel.cameraIb.setOnClickListener {
+            cameraLayout.cameraPanel.cameraIb.setOnClickListener {
                 launchCameraOrGallery(CameraResultContract.Action.CAMERA)
                 hideCameraPanel()
             }
-            cameraPanel.galleryIb.setOnClickListener {
+            cameraLayout.cameraPanel.galleryIb.setOnClickListener {
                 launchCameraOrGallery(CameraResultContract.Action.GALLERY)
                 hideCameraPanel()
             }
@@ -146,17 +149,20 @@ class SignUpFragment : Fragment() {
        }catch (e: IOException){
            "${e.message}".showToast(requireContext())
        }
+        hideCameraPanel()
     }
 
     private fun showCameraPanel() {
-        binding.cameraPanel.cameraLayout.also {
-            it.animate().translationY(-(binding.cameraPanel.cameraLayout.height).toFloat())
+        binding.camera = true
+        binding.cameraLayout.cameraPanel.cameraLayout.also {
+            it.animate().translationY(-(binding.cameraLayout.cameraPanel.cameraLayout.height).toFloat())
                 .start()
         }
     }
 
     private fun hideCameraPanel() {
-        binding.cameraPanel.cameraLayout.animate().translationY(0f).start()
+        binding.camera = false
+        binding.cameraLayout.cameraPanel.cameraLayout.animate().translationY(0f).start()
     }
 
     private fun setAvatar(avatar: Bitmap) {

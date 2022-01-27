@@ -19,6 +19,7 @@ class FirebaseRepository @Inject constructor(
     private val storage: StorageReference
 ) : DatabaseInterface {
 
+    private lateinit var  listener: ChildEventListener
 
     @Synchronized override fun insertMessage(uid: String, message: Message) {
         reference.child(uid)
@@ -106,7 +107,7 @@ class FirebaseRepository @Inject constructor(
 
 
     fun addChatListener(callback: (Message) -> Unit) {
-        reference.child(USER_ID).addChildEventListener(object : ChildEventListener {
+        listener = object : ChildEventListener {
             //Отфильтровываем только сообщения от пользователя ((from != null)).
             //Сообщения, отправленные пользователю отслеживаются в методе onChildChanged!
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -115,7 +116,7 @@ class FirebaseRepository @Inject constructor(
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 callback(
-                        snapshot.getValue(FirebaseMessage::class.java)!!
+                    snapshot.getValue(FirebaseMessage::class.java)!!
                 )
             }
 
@@ -125,6 +126,11 @@ class FirebaseRepository @Inject constructor(
 
             override fun onCancelled(error: DatabaseError) {}
 
-        })
+        }
+        reference.child(USER_ID).addChildEventListener(listener)
+    }
+
+    fun removeChatListener(){
+        reference.child(USER_ID).removeEventListener(listener)
     }
 }

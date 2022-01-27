@@ -4,149 +4,165 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="isVisible"
             type="com.example.mymessenger.utills.State" />
+
+        <variable
+            name="camera"
+            type="Boolean" />
+
+        <import type="android.view.View" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/signup_layout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top"
         tools:context=".ui.fragments.login.SignUpFragment">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/avatar_iv"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/circleImageView"
-            android:background="@android:color/holo_blue_light" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/l_nickname"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/signup_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/et_nickname"
-            app:counterEnabled="true"
-            app:counterMaxLength="10"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/avatar_iv"
-            app:layout_constraintStart_toStartOf="@+id/avatar_iv"
-            app:layout_constraintTop_toBottomOf="@id/avatar_iv"
-            app:startIconContentDescription="@string/et_email"
-            app:startIconDrawable="@drawable/ic_nickname">
+            android:layout_height="match_parent"
+            android:gravity="top">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_nickname"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/avatar_iv"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@android:color/holo_blue_light"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/circleImageView" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/l_nickname"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:maxLength="10" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="@string/et_nickname"
+                app:counterEnabled="true"
+                app:counterMaxLength="10"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/avatar_iv"
+                app:layout_constraintStart_toStartOf="@+id/avatar_iv"
+                app:layout_constraintTop_toBottomOf="@id/avatar_iv"
+                app:startIconContentDescription="@string/et_email"
+                app:startIconDrawable="@drawable/ic_nickname">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/l_email"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/et_email"
-            app:endIconMode="clear_text"
-            app:errorEnabled="true"
-            app:layout_constraintEnd_toEndOf="@+id/l_nickname"
-            app:layout_constraintStart_toStartOf="@+id/l_nickname"
-            app:layout_constraintTop_toBottomOf="@+id/l_nickname"
-            app:startIconContentDescription="@string/et_email"
-            app:startIconDrawable="@drawable/ic_email">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="10" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_email"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/l_email"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="@string/et_email"
+                app:endIconMode="clear_text"
+                app:errorEnabled="true"
+                app:layout_constraintEnd_toEndOf="@+id/l_nickname"
+                app:layout_constraintStart_toStartOf="@+id/l_nickname"
+                app:layout_constraintTop_toBottomOf="@+id/l_nickname"
+                app:startIconContentDescription="@string/et_email"
+                app:startIconDrawable="@drawable/ic_email">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/l_password"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/et_password"
-            app:endIconMode="password_toggle"
-            app:errorEnabled="true"
-            app:layout_constraintTop_toBottomOf="@+id/l_email"
-            app:startIconContentDescription="@string/password"
-            app:startIconDrawable="@drawable/ic_password">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_password"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/l_password"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="@string/et_password"
+                app:endIconMode="password_toggle"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toBottomOf="@+id/l_email"
+                app:startIconContentDescription="@string/password"
+                app:startIconDrawable="@drawable/ic_password">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/l_confirm_password"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/confirm_password"
-            app:endIconMode="password_toggle"
-            app:errorEnabled="true"
-            app:layout_constraintTop_toBottomOf="@+id/l_password"
-            app:startIconContentDescription="@string/password"
-            app:startIconDrawable="@drawable/ic_password">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_confirm_password"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/l_confirm_password"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="@string/confirm_password"
+                app:endIconMode="password_toggle"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toBottomOf="@+id/l_password"
+                app:startIconContentDescription="@string/password"
+                app:startIconDrawable="@drawable/ic_password">
 
-        <Button
-            android:id="@+id/btn_sign_up"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="@string/sign_up_button"
-            app:cornerRadius="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/l_confirm_password"
-            app:shapeAppearance="?attr/waveShape" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/avatar_rv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/btn_sign_up"
-            app:layout_constraintStart_toStartOf="@+id/btn_sign_up"
-            app:layout_constraintTop_toBottomOf="@+id/btn_sign_up" />
+            <Button
+                android:id="@+id/btn_sign_up"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/sign_up_button"
+                app:cornerRadius="24dp"
+                app:layout_constraintTop_toBottomOf="@+id/l_confirm_password"
+                app:shapeAppearance="?attr/waveShape" />
 
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/camera_bottom_layout"
-            android:id="@+id/camera_panel"
-            app:layout_constraintTop_toBottomOf="parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/avatar_rv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/btn_sign_up"
+                app:layout_constraintStart_toStartOf="@+id/btn_sign_up"
+                app:layout_constraintTop_toBottomOf="@+id/btn_sign_up" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:view_set="@{isVisible}">
+
+                <include
+                    android:id="@+id/loader"
+                    layout="@layout/load_animation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout
-            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:view_set="@{isVisible}">
+            android:layout_height="match_parent"
+            android:visibility="@{camera ? View.VISIBLE : View.INVISIBLE}">
+
             <include
-                android:id="@+id/loader"
+                android:id="@+id/camera_layout"
+                layout="@layout/camera_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                layout="@layout/load_animation"/>
+                android:layout_height="match_parent" />
         </FrameLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 </layout>

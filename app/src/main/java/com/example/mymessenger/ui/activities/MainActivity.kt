@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
     private lateinit var navController: NavController
-    lateinit var connection: ServiceConnection
+    private lateinit var connection: ServiceConnection
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +68,6 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.navController
-        //setupActionBarWithNavController(navController)
         //Проверяем, был ли старт черех push-уведомление
         navigateToPrivateChatFragment(intent)
         setToolbar()
@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
         Intent(this, DatabaseService::class.java).also { intent ->
             bindService(intent, connection, Context.BIND_AUTO_CREATE)
             mBound = true
@@ -163,4 +164,8 @@ class MainActivity : AppCompatActivity() {
             it.customView = view
         }
     }
+
+
+
+
 }

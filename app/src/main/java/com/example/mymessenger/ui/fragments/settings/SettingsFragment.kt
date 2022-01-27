@@ -83,13 +83,13 @@ class SettingsFragment : Fragment() {
                 it.visibility = if(it.isVisible) View.GONE else View.VISIBLE
             }
         }
-        binding.fakeBtn.setOnClickListener {
+        binding.cameraLayout.fakeBtn.setOnClickListener {
             hideCameraPanel()
         }
-        binding.cameraPanel.cameraIb.setOnClickListener {
+        binding.cameraLayout.cameraPanel.cameraIb.setOnClickListener {
             launchCameraOrGallery(CameraResultContract.Action.CAMERA)
         }
-        binding.cameraPanel.galleryIb.setOnClickListener {
+        binding.cameraLayout.cameraPanel.galleryIb.setOnClickListener {
             launchCameraOrGallery(CameraResultContract.Action.GALLERY)
         }
         binding.editBtn.setOnClickListener {
@@ -142,13 +142,13 @@ class SettingsFragment : Fragment() {
 
     private fun showCameraPanel() {
         binding.camera = true
-        binding.cameraPanel.cameraLayout
-            .animate().translationY(-(binding.cameraPanel.cameraLayout.height).toFloat())
+        binding.cameraLayout.cameraPanel.cameraLayout
+            .animate().translationY(-(binding.cameraLayout.cameraPanel.cameraLayout.height).toFloat())
             .start()
     }
 
     private fun hideCameraPanel() {
-        binding.cameraPanel.cameraLayout.animate().translationY(0f).start()
+        binding.cameraLayout.cameraPanel.cameraLayout.animate().translationY(0f).start()
         binding.camera = false
     }
     private fun launchCameraOrGallery(action: CameraResultContract.Action) {
@@ -183,13 +183,5 @@ class SettingsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-}
-@BindingAdapter("avatar_bind", "error")
-fun loadAvatar(image: ImageView, bytes: ByteArray?, error: Drawable){
-    Glide.with(image)
-        .load(bytes)
-        .error(error)
-        .placeholder(error)
-        .into(image)
 }
 

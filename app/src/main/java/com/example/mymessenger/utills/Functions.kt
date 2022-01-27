@@ -1,12 +1,15 @@
 package com.example.mymessenger.utills
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.util.Patterns
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LifecycleCoroutineScope
+import com.bumptech.glide.Glide
 import com.example.mymessenger.R
 import com.example.mymessenger.firebase.FirebaseContact
 import com.example.mymessenger.interfaces.Contact
@@ -109,6 +112,15 @@ fun setVisibility(view: View, state: State<Any>){
     }
     else
         view.visibility = View.GONE
+}
+
+@BindingAdapter("avatar_bind", "error")
+fun loadAvatar(image: ImageView, bytes: ByteArray?, error: Drawable){
+    Glide.with(image)
+        .load(bytes)
+        .error(error)
+        .placeholder(error)
+        .into(image)
 }
 
 fun String.logz(){

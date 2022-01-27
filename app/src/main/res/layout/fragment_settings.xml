@@ -97,25 +97,17 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/camera_layout"
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="@{camera ? View.VISIBLE : View.INVISIBLE}">
-
-            <View
-                android:id="@+id/fake_btn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
             <include
-                android:id="@+id/camera_panel"
-                layout="@layout/camera_bottom_layout"
+                android:id="@+id/camera_layout"
+                layout="@layout/camera_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="match_parent"/>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
