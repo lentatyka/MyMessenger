@@ -17,6 +17,7 @@ import com.example.mymessenger.ui.activities.MainActivity
 import com.example.mymessenger.ui.fragments.chatlist.ViewType
 import com.example.mymessenger.utills.launchWhenStarted
 import com.example.mymessenger.viewmodels.MainViewModel
+import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
 
@@ -47,7 +48,7 @@ class FriendListFragment : Fragment() {
         (activity as MainActivity).supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             val view = it.customView
-            view.findViewById<CardView>(R.id.avatar_card).visibility = View.GONE
+            view.findViewById<ShapeableImageView>(R.id.avatar_iv).visibility = View.GONE
             view.findViewById<TextView>(R.id.title_tv).text = getString(R.string.friends)
         }
     }

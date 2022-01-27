@@ -5,12 +5,16 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
-import android.view.LayoutInflater
-import android.widget.TextView
 import androidx.appcompat.app.ActionBar
+import androidx.core.content.getSystemService
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -27,6 +31,7 @@ import com.example.mymessenger.utills.Constants.CONTACT_ID
 import com.example.mymessenger.utills.Constants.NEW_MESSAGE
 import com.example.mymessenger.utills.Constants.START_PRIVATE_CHAT
 import com.example.mymessenger.utills.launchWhenStarted
+import com.example.mymessenger.utills.logz
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.coroutines.flow.onEach
@@ -131,7 +136,7 @@ class MainActivity : AppCompatActivity() {
                                 startNotification(contact)
                         }
                     }
-                    R.id.contactsFragment ->
+                    R.id.friendlistFragment ->
                         startNotification(contact)
                     R.id.chatListFragment -> {
                     }

@@ -8,5 +8,6 @@ interface Authenticator<out T> {
     suspend fun signOut()
     fun sendEmailVerification()
     suspend fun resetPassword(email: String)
-    fun requestUserInfo(): Flow<T>
+    suspend fun requestUserInfo(): T
+    suspend fun updateUserInfo(name: String)
 }

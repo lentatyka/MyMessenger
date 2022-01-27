@@ -17,21 +17,23 @@
         tools:layout="@layout/fragment_chatlist" >
         <action
             android:id="@+id/action_chatListFragment_to_contactsFragment"
-            app:destination="@id/contactsFragment" />
+            app:destination="@id/friendlistFragment" />
         <action
             android:id="@+id/action_chatListFragment_to_privateChatFragment"
             app:destination="@id/privateChatFragment" />
+        <action
+            android:id="@+id/action_chatListFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/contactsFragment"
+        android:id="@+id/friendlistFragment"
         android:name="com.example.mymessenger.ui.fragments.contacts.FriendListFragment"
         android:label="fragment_contacts"
         tools:layout="@layout/fragment_friendlist">
         <action
             android:id="@+id/action_contactsFragment_to_privateChatFragment"
             app:destination="@id/privateChatFragment"
-            app:popUpTo="@id/chatListFragment"
-            app:popUpToInclusive="true" />
+            app:popUpTo="@id/chatListFragment" />
         <action
             android:id="@+id/action_contactsFragment_to_chatListFragment"
             app:destination="@id/chatListFragment"
@@ -39,7 +41,7 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_contactsFragment_to_contactsFragment2"
-            app:destination="@id/contactsFragment2" />
+            app:destination="@id/contactsFragment" />
     </fragment>
     <fragment
         android:id="@+id/privateChatFragment"
@@ -49,6 +51,7 @@
         <action
             android:id="@+id/action_privateChatFragment_to_chatListFragment"
             app:destination="@id/chatListFragment"
+            app:launchSingleTop="true"
             app:popUpTo="@id/chatListFragment"
             app:popUpToInclusive="true" />
         <argument
@@ -56,18 +59,28 @@
             app:argType="com.example.mymessenger.interfaces.Contact" />
     </fragment>
     <fragment
-        android:id="@+id/contactsFragment2"
+        android:id="@+id/contactsFragment"
         android:name="com.example.mymessenger.ui.fragments.contacts.ContactsFragment"
         android:label="fragment_contacts"
         tools:layout="@layout/fragment_contacts" >
         <action
             android:id="@+id/action_contactsFragment2_to_contactsFragment"
-            app:destination="@id/contactsFragment"
-            app:popUpTo="@id/contactsFragment"
+            app:destination="@id/friendlistFragment"
+            app:popUpTo="@id/friendlistFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_contactsFragment2_to_privateChatFragment"
             app:destination="@id/privateChatFragment"
+            app:popUpTo="@id/chatListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.mymessenger.ui.fragments.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_chatListFragment"
+            app:destination="@id/chatListFragment"
             app:popUpTo="@id/chatListFragment"
             app:popUpToInclusive="true" />
     </fragment>

@@ -5,6 +5,7 @@ import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
+import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.example.mymessenger.R
 import com.example.mymessenger.firebase.FirebaseContact
@@ -99,6 +100,15 @@ fun <T> Flow<T>.launchWhenResumed(lifecycleScope: LifecycleCoroutineScope){
     lifecycleScope.launchWhenResumed {
         this@launchWhenResumed.collect()
     }
+}
+
+@BindingAdapter("view_set")
+fun setVisibility(view: View, state: State<Any>){
+    if(state is State.Loading){
+        view.visibility = View.VISIBLE
+    }
+    else
+        view.visibility = View.GONE
 }
 
 fun String.logz(){

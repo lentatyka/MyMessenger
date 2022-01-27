@@ -6,14 +6,10 @@ import com.example.mymessenger.interfaces.Message
 import com.example.mymessenger.utills.Constants.USERS_PATH
 import com.example.mymessenger.utills.Constants.USER_ID
 import com.example.mymessenger.utills.MessageStatus
-import com.example.mymessenger.utills.logz
 import com.example.mymessenger.viewmodels.LoginViewModel
 import com.google.firebase.FirebaseException
 import com.google.firebase.database.*
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.tasks.await
 import java.io.IOException
 import javax.inject.Inject
@@ -50,13 +46,16 @@ class FirebaseRepository @Inject constructor(
             .child(message.messageId).setValue(fb)
     }
 
-    override suspend fun getContacts(filter: List<String>): List<FirebaseContact> {
+    override suspend fun getContacts(filter: List<String>, inclusive: Boolean): List<FirebaseContact> {
         try{
             val contacts = reference.child(USERS_PATH).get().await()
             val contactsList = mutableListOf<FirebaseContact>()
             contacts.children.forEach { snapshot ->
                 snapshot.getValue(FirebaseContact::class.java)?.let { contact ->
-                    if (contact.uid != USER_ID && !filter.contains(contact.uid)){
+                    if (
+                        contact.uid != USER_ID &&
+                            if(inclusive) filter.contains(contact.uid) else !filter.contains(contact.uid)
+                    ){
                         contact.copy(
                             avatar = getFile(contact.uid)
                         ).also {
@@ -84,8 +83,8 @@ class FirebaseRepository @Inject constructor(
         }
     }
 
-    override suspend fun insertFile() {
-        TODO("Not yet implemented")
+    override suspend fun insertFile(byteArray: ByteArray) {
+        storage.child(USER_ID).putBytes(byteArray)
     }
 
     override suspend fun updateFile() {

@@ -6,9 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,7 +14,6 @@ import com.example.mymessenger.databinding.FragmentSignInBinding
 import com.example.mymessenger.ui.activities.MainActivity
 import com.example.mymessenger.utills.*
 import com.example.mymessenger.utills.Constants.USER_ID
-import com.example.mymessenger.utills.Constants.USER_NAME
 import com.example.mymessenger.viewmodels.LoginViewModel
 import com.example.mymessenger.viewmodels.LoginViewModel.Companion.ERROR_EMAIL_NOT_VERIFIED
 import com.example.mymessenger.viewmodels.LoginViewModel.Companion.ERROR_USER_NOT_FOUND
@@ -110,7 +106,6 @@ class SignInFragment : Fragment() {
     private fun navigateToChatList() {
         val sharedPref = activity?.getSharedPreferences(getString(R.string.preferences), Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()){
-            putString(getString(R.string.user_name), USER_NAME)
             putString(getString(R.string.user_id), USER_ID)
             apply()
         }

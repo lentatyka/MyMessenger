@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.contacts.ContactsFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/contacts_rv"
+    <data>
+        <variable
+            name="isVisible"
+            type="com.example.mymessenger.utills.State" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        tools:listitem="@layout/contacts_item"
-        android:visibility="gone"
-        />
+        tools:context=".ui.fragments.contacts.ContactsFragment">
 
-    <com.agrawalsuneet.dotsloader.loaders.TashieLoader
-        android:id="@+id/loader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:tashieloader_animDelay="200"
-        app:tashieloader_animDur="1000"
-        app:tashieloader_dotsColor="@color/teal_200"
-        app:tashieloader_dotsDist="5dp"
-        app:tashieloader_dotsRadius="20dp"
-        app:tashieloader_interpolator="@android:anim/accelerate_interpolator"
-        app:tashieloader_noOfDots="6"
-        android:visibility="gone"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contacts_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            tools:listitem="@layout/contacts_item"
+            android:visibility="visible" />
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:view_set="@{isVisible}"
+            android:background="@color/white"
+            android:gravity="center">
+            <include
+                android:id="@+id/loader"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                layout="@layout/load_animation" />
+        </LinearLayout>
+
+    </FrameLayout>
+</layout>

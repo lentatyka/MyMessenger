@@ -41,7 +41,6 @@ class ResetPasswordFragment : Fragment() {
                 loginViewModel.isValidEmail(etEmail.text.toString())
             }
                 btnSend.setOnClickListener {
-                    it.requestFocus()
                     val email = etEmail.text.toString()
                     if(loginViewModel.isValidEmail(email)){
                         loginViewModel.resetPassword(email).onEach {state->

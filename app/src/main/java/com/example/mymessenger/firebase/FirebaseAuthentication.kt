@@ -85,9 +85,7 @@ class FirebaseAuthentication @Inject constructor(
         }
     }
 
-    override fun requestUserInfo() = flow{
-        emit(auth.currentUser)
-    }
+    override suspend fun requestUserInfo() = auth.currentUser
 
     private fun getErrorCode(error: String):Int{
         val code = when(error){
@@ -97,5 +95,11 @@ class FirebaseAuthentication @Inject constructor(
             else-> ERROR_UNKNOWN
         }
         return code
+    }
+
+    override suspend fun updateUserInfo(name: String) {
+        UserProfileChangeRequest.Builder().setDisplayName(name).build().also {
+            auth.currentUser?.updateProfile(it)
+        }
     }
 }

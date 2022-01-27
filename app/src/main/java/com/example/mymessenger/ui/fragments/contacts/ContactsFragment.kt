@@ -3,8 +3,7 @@ package com.example.mymessenger.ui.fragments.contacts
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.TextView
-import androidx.cardview.widget.CardView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -13,11 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymessenger.R
 import com.example.mymessenger.databinding.FragmentContactsBinding
 import com.example.mymessenger.interfaces.Contact
-import com.example.mymessenger.ui.activities.MainActivity
 import com.example.mymessenger.ui.fragments.chatlist.ViewType
 import com.example.mymessenger.utills.State
 import com.example.mymessenger.utills.launchWhenStarted
-import com.example.mymessenger.utills.logz
 import com.example.mymessenger.utills.showToast
 import com.example.mymessenger.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,8 +37,7 @@ class ContactsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentContactsBinding.inflate(layoutInflater, container, false)
-        setToolbar()
+        _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_contacts, container, false)
         return binding.root
     }
 
@@ -53,18 +49,12 @@ class ContactsFragment : Fragment() {
 
     private fun setViewModel() {
         viewModel.findContacts().onEach { state->
+           binding.isVisible = state
             when(state){
                 is State.Object ->{
                     _adapter.setList(state.contacts.toList())
-                    binding.loader.visibility = View.GONE
-                    binding.contactsRv.visibility = View.VISIBLE
-                }
-                is State.Loading->{
-                    binding.loader.visibility = View.VISIBLE
-                    binding.contactsRv.visibility = View.GONE
                 }
                 is State.Error->{
-                    binding.loader.visibility = View.GONE
                     getString(R.string.error_unknown).showToast(requireContext())
                 }
                 else->{
@@ -99,15 +89,6 @@ class ContactsFragment : Fragment() {
         }
     }
 
-    private fun setToolbar() {
-        (activity as MainActivity).supportActionBar?.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            val view = it.customView
-            view.findViewById<CardView>(R.id.avatar_card).visibility = View.GONE
-            view.findViewById<TextView>(R.id.title_tv).text = getString(R.string.contacts)
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.contactmenu, menu)
         _menu = menu
@@ -121,12 +102,10 @@ class ContactsFragment : Fragment() {
                 )
             }
             R.id.item_add ->{
-//                newContact?.let {
-//                    viewModel.addContactToFriend(it)
-//                    findNavController().navigate(
-//                        ContactsFragmentDirections.actionContactsFragment2ToContactsFragment()
-//                    )
-//                }
+                    viewModel.addContactToFriend(contacts)
+                    findNavController().navigate(
+                        ContactsFragmentDirections.actionContactsFragment2ToContactsFragment()
+                    )
             }
         }
         return true

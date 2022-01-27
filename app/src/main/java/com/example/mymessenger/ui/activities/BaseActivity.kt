@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import com.example.mymessenger.R
 import com.example.mymessenger.utills.Constants.USER_ID
-import com.example.mymessenger.utills.Constants.USER_NAME
 
 class BaseActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,10 +12,7 @@ class BaseActivity : Activity() {
         val sharedPref =
             getSharedPreferences(getString(R.string.preferences), MODE_PRIVATE) ?: return
         sharedPref.apply {
-            if(contains(getString(R.string.user_name)) && contains(getString(R.string.user_id))){
-                getString(getString(R.string.user_name), null)?.let {
-                    USER_NAME = it
-                }
+            if(contains(getString(R.string.user_id))){
                 getString(getString(R.string.user_id), null)?.let {
                     USER_ID = it
                 }

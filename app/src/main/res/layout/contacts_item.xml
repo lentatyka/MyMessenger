@@ -14,22 +14,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/avatar_card"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/contact_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:elevation="12dp"
-            android:layout_centerHorizontal="true"
-            android:innerRadius="0dp"
-            android:shape="ring"
-            android:thicknessRatio="1.9"
-            app:cardCornerRadius="20dp">
-            <ImageView
-                android:id="@+id/contact_iv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_avatar" />
-        </androidx.cardview.widget.CardView>
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/circleImageView"
+            android:background="@android:color/holo_blue_light"
+            />
     </RelativeLayout>
 
     <TextView

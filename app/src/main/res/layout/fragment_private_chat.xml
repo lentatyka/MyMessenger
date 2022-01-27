@@ -17,7 +17,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp"
-        android:background="@color/chat_color"/>
+        android:background="@android:color/holo_green_light"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"

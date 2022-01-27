@@ -23,6 +23,7 @@ import com.example.mymessenger.utills.Constants.CONTACT_ID
 import com.example.mymessenger.utills.launchWhenStarted
 import com.example.mymessenger.utills.logz
 import com.example.mymessenger.viewmodels.MainViewModel
+import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.avatar_item.*
@@ -87,7 +88,7 @@ class PrivateChatFragment : Fragment() {
     private fun setToolbar() {
         (activity as MainActivity).supportActionBar?.let {
             val view = it.customView
-            view.findViewById<CardView>(R.id.avatar_card).visibility = View.VISIBLE
+            view.findViewById<ShapeableImageView>(R.id.avatar_iv).visibility = View.VISIBLE
             view.findViewById<TextView>(R.id.title_tv).text = args.contact.nickname
             it.setDisplayHomeAsUpEnabled(true)
             Glide.with(view)

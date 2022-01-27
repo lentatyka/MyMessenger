@@ -1,24 +1,20 @@
 package com.example.mymessenger.ui.fragments.login
 
-import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout.HORIZONTAL
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.mymessenger.R
 import com.example.mymessenger.databinding.FragmentSignUpBinding
 import com.example.mymessenger.utills.*
@@ -26,31 +22,33 @@ import com.example.mymessenger.viewmodels.LoginViewModel
 import com.example.mymessenger.viewmodels.LoginViewModel.Companion.ERROR_EMAIL_ALREADY_IN_USE
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
+import java.io.IOException
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
     private val loginViewModel: LoginViewModel by activityViewModels()
-    private lateinit var cameraActivity: ActivityResultLauncher<Intent>
+    @Inject
+    lateinit var cameraResultContract: CameraResultContract
+    lateinit var cameraActivity: ActivityResultLauncher<CameraResultContract.Action>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentSignUpBinding.inflate(layoutInflater)
+        _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_sign_up, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cameraActivity = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ){ result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                    setAvatar(
-                        result.data!!.extras!!.get("data") as Bitmap
-                    )
+            cameraResultContract
+        ){result->
+            result?.let {
+                setAvatar(it)
             }
         }
         setViewModel()
@@ -59,6 +57,7 @@ class SignUpFragment : Fragment() {
 
     private fun setViewModel() {
         loginViewModel.state.onEach { state ->
+            binding.isVisible = state
             when (state) {
                 is State.Success -> {
                     getString(R.string.confirm_email).showSnackBar(binding.root) {
@@ -76,9 +75,6 @@ class SignUpFragment : Fragment() {
                             getString(R.string.error_unknown).showToast(requireContext())
                     }
                 }
-                is State.Loading -> {
-                    //show loading
-                }
                 else -> {
                     //nothing
                 }
@@ -86,6 +82,7 @@ class SignUpFragment : Fragment() {
         }.launchWhenStarted(lifecycleScope)
     }
 
+    @SuppressLint("WrongConstant")
     private fun setLayout() {
         binding.apply {
             lEmail.setListener(getString(R.string.email_error), etEmail) {
@@ -114,11 +111,11 @@ class SignUpFragment : Fragment() {
             }
             avatarRv.apply {
                 layoutManager = LinearLayoutManager(requireContext(), HORIZONTAL, false)
-                adapter = AvatarAdapter(list){
+                adapter = AvatarAdapter(list) {
                     it?.let {
                         setAvatar(it)
                         loginViewModel.setAvatar(it)
-                    } ?: startCamera()
+                    } ?: showCameraPanel()
                 }
             }
             btnSignUp.setOnClickListener {
@@ -131,25 +128,41 @@ class SignUpFragment : Fragment() {
                     getString(R.string.invalid_data).showToast(requireContext())
                 }
             }
+
+            cameraPanel.cameraIb.setOnClickListener {
+                launchCameraOrGallery(CameraResultContract.Action.CAMERA)
+                hideCameraPanel()
+            }
+            cameraPanel.galleryIb.setOnClickListener {
+                launchCameraOrGallery(CameraResultContract.Action.GALLERY)
+                hideCameraPanel()
+            }
         }
     }
 
-    private fun setAvatar(avatar: Bitmap){
-        Glide.with(this)
-            .load(avatar)
-            .centerCrop()
-            .into(binding.avatarLayout.avatarIv)
+    private fun launchCameraOrGallery(action: CameraResultContract.Action) {
+       try {
+           cameraActivity.launch(action)
+       }catch (e: IOException){
+           "${e.message}".showToast(requireContext())
+       }
     }
 
-    private fun startCamera() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
-        try {
-            cameraActivity.launch(takePictureIntent)
-        } catch (e: ActivityNotFoundException) {
-            "$e".showToast(requireContext())
+    private fun showCameraPanel() {
+        binding.cameraPanel.cameraLayout.also {
+            it.animate().translationY(-(binding.cameraPanel.cameraLayout.height).toFloat())
+                .start()
         }
     }
+
+    private fun hideCameraPanel() {
+        binding.cameraPanel.cameraLayout.animate().translationY(0f).start()
+    }
+
+    private fun setAvatar(avatar: Bitmap) {
+        binding.avatarIv.setImageBitmap(avatar)
+    }
+
 
     private fun checkSignUpFields(): Boolean {
         binding.apply {
@@ -165,6 +178,7 @@ class SignUpFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
     override fun onStop() {
         super.onStop()
         loginViewModel.setState(State.Waiting)

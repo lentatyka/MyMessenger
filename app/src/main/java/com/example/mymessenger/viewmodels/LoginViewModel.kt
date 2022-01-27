@@ -2,21 +2,17 @@ package com.example.mymessenger.viewmodels
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mymessenger.R
 import com.example.mymessenger.firebase.DatabaseException
 import com.example.mymessenger.interfaces.Authenticator
 import com.example.mymessenger.utills.Constants.USER_ID
-import com.example.mymessenger.utills.Constants.USER_NAME
 import com.example.mymessenger.utills.State
 import com.example.mymessenger.utills.isValidEmail
 import com.example.mymessenger.utills.isValidPassword
-import com.example.mymessenger.utills.logz
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -54,8 +50,7 @@ class LoginViewModel @Inject constructor(
             _state.value = State.Loading
             try{
                 auth.signIn(email, password).also {
-                    USER_NAME = it!!.displayName ?: "${it.email}"
-                    USER_ID = it.uid
+                    USER_ID = it?.uid!!
                     _state.value = State.Success
                 }
             }catch (e: DatabaseException){
@@ -111,8 +106,6 @@ class LoginViewModel @Inject constructor(
                 emit(State.Error(e))
             }
     }
-
-    fun requestUserInfo() = auth.requestUserInfo()
     fun isValidPassword(string: String) = string.isValidPassword()
     fun setAvatar(it: Bitmap) {
         avatar = it

@@ -4,6 +4,7 @@ import androidx.room.*
 import com.example.mymessenger.utills.Constants.SQLITE_TABLE_CHAT
 import com.example.mymessenger.utills.Constants.SQLITE_TABLE_CONTACTS
 import com.example.mymessenger.utills.MessageStatus
+import com.example.mymessenger.utills.logz
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,9 +22,6 @@ interface RoomDao {
 
     @Query("SELECT * FROM $SQLITE_TABLE_CHAT WHERE uid= :uid  ORDER BY timestamp ASC")
     fun getChat(uid: String): Flow<List<RoomMessage>>
-
-    @Query("SELECT * FROM $SQLITE_TABLE_CHAT WHERE uid =:uid AND status IS NOT 'NEW' ORDER BY timestamp ASC")
-    suspend fun checkNewMessages(uid: String):List<RoomMessage>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessages(messages: List<RoomMessage>)
@@ -48,7 +46,7 @@ interface RoomDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     @JvmSuppressWildcards
-    suspend fun insertContact(roomContact: RoomContact)
+    suspend fun insertContact(roomContacts: List<RoomContact>)
 
     @Query("SELECT * FROM $SQLITE_TABLE_CONTACTS WHERE cuid =:uid")
     suspend fun getContact(uid: String):RoomContact?
@@ -57,10 +55,10 @@ interface RoomDao {
     fun getContacts():Flow<List<RoomContact>>
 
     @Delete
-    suspend fun deleteContacts(contacts: List<RoomContact>)
+    suspend fun deleteContacts(contacts: List<RoomContact>):Int
 
     @Query("UPDATE $SQLITE_TABLE_CONTACTS SET isOwn = :op WHERE cuid =:uid")
-    suspend fun updatez(uid: String, op:Boolean):Int
+    suspend fun updateContact(uid: String, op:Boolean):Int
 
     @Transaction
     suspend fun deleteContactAndChat(contacts: List<RoomContact>){
