@@ -127,6 +127,7 @@ class ChatListFragment : Fragment() {
         when(item.itemId){
             R.id.item_sign_out ->{
                 showAlertDialog(null, getString(R.string.sign_out)){
+                    (activity as MainActivity).stopDatabaseService()
                     Intent(context, LoginActivity::class.java).also {
                         it.flags = (Intent.FLAG_ACTIVITY_NEW_TASK
                                 or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)

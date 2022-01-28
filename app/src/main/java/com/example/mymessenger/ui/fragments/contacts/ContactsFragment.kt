@@ -2,6 +2,7 @@ package com.example.mymessenger.ui.fragments.contacts
 
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -12,11 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymessenger.R
 import com.example.mymessenger.databinding.FragmentContactsBinding
 import com.example.mymessenger.interfaces.Contact
+import com.example.mymessenger.ui.activities.MainActivity
 import com.example.mymessenger.ui.fragments.chatlist.ViewType
 import com.example.mymessenger.utills.State
 import com.example.mymessenger.utills.launchWhenStarted
 import com.example.mymessenger.utills.showToast
 import com.example.mymessenger.viewmodels.MainViewModel
+import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.onEach
 
@@ -38,6 +41,7 @@ class ContactsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_contacts, container, false)
+        setToolbar()
         return binding.root
     }
 
@@ -86,6 +90,13 @@ class ContactsFragment : Fragment() {
             layoutManager = LinearLayoutManager(this.context)
             addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
             adapter = _adapter
+        }
+    }
+
+    private fun setToolbar() {
+        (activity as MainActivity).supportActionBar?.let {
+            val view = it.customView
+            view.findViewById<TextView>(R.id.title_tv).text = getString(R.string.contacts)
         }
     }
 

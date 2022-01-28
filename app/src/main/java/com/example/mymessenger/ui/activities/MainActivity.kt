@@ -13,6 +13,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.core.content.getSystemService
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +25,7 @@ import com.example.mymessenger.R
 import com.example.mymessenger.databinding.ActivityMainBinding
 import com.example.mymessenger.interfaces.Contact
 import com.example.mymessenger.services.NotificationService
+import com.example.mymessenger.utills.Constants
 import com.example.mymessenger.utills.Constants.ACTION_START_SERVICE
 import com.example.mymessenger.utills.Constants.ACTION_STOP_SERVICE
 import com.example.mymessenger.utills.Constants.CONTACT
@@ -82,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun stopDatabaseService() {
+    fun stopDatabaseService() {
         if (mService.isRunning) {
             Intent(this, DatabaseService::class.java).also { intent ->
                 intent.action = ACTION_STOP_SERVICE
@@ -164,8 +166,4 @@ class MainActivity : AppCompatActivity() {
             it.customView = view
         }
     }
-
-
-
-
 }

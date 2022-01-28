@@ -13,10 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/et_email"
-        android:layout_alignParentTop="true"
         app:endIconMode="clear_text"
         app:errorEnabled="true"
-        app:startIconContentDescription="@string/et_email"
         app:startIconDrawable="@drawable/ic_email">
 
         <com.google.android.material.textfield.TextInputEditText
