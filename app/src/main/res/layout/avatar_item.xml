@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/avatar_item"
+    android:focusableInTouchMode="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="4dp">
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/avatar_iv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="center"
+        app:srcCompat="@drawable/ic_add_avatar"
+        app:shapeAppearanceOverlay="@style/circleImageView"
+        android:background="@android:color/holo_blue_light"
+        />
+</LinearLayout>
